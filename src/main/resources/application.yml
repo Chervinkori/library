@@ -1,0 +1,11 @@
+spring:
+  main:
+    banner-mode: off
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+    locations: filesystem:src/main/resources/migration
