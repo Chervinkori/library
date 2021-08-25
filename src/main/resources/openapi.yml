@@ -1,0 +1,270 @@
+openapi: 3.0.3
+info:
+  title: Swagger Library
+  contact:
+    email: romachervinko@gmail.com
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: theme
+    description: 'the theme API lol'
+  - name: publishing-house
+    description: 'the publishing house API'
+  - name: book-state
+    description: 'the book state API'
+paths:
+  /theme:
+    post:
+      tags:
+        - theme
+      summary: Create theme
+      operationId: createTheme
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Theme'
+        required: true
+      responses:
+        default:
+          description: Successful operation
+          content: { }
+      x-codegen-request-body-name: body
+    put:
+      tags:
+        - theme
+      summary: Updated theme
+      operationId: updateThemeById
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Theme'
+        required: true
+      responses:
+        '404':
+          description: Theme not found
+          content: { }
+  /theme/{id}:
+    get:
+      tags:
+        - theme
+      summary: Get theme
+      operationId: getThemeById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Theme'
+        '404':
+          description: Theme not found
+          content: { }
+    delete:
+      tags:
+        - theme
+      summary: Deletes theme
+      operationId: deleteThemeById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404':
+          description: Theme not found
+          content: { }
+  /publishing-house:
+    post:
+      tags:
+        - publishing-house
+      summary: Create publishing house
+      operationId: createPublishingHouse
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PublishingHouse'
+        required: true
+      responses:
+        default:
+          description: Successful operation
+          content: { }
+      x-codegen-request-body-name: body
+    put:
+      tags:
+        - publishing-house
+      summary: Updated publishing house
+      operationId: updatePublishingHouseById
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PublishingHouse'
+        required: true
+      responses:
+        '404':
+          description: Theme not found
+          content: { }
+  /publishing-house/{id}:
+    get:
+      tags:
+        - publishing-house
+      summary: Get publishing house
+      operationId: getPublishingHouseById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishingHouse'
+        '404':
+          description: Theme not found
+          content: { }
+    delete:
+      tags:
+        - publishing-house
+      summary: Deletes publishing house
+      operationId: deletePublishingHouseById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404':
+          description: Theme not found
+          content: { }
+  /book-state:
+    post:
+      tags:
+        - book-state
+      summary: Create book state
+      operationId: createBookState
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/BookState'
+        required: true
+      responses:
+        default:
+          description: Successful operation
+          content: { }
+      x-codegen-request-body-name: body
+    put:
+      tags:
+        - book-state
+      summary: Updated book state
+      operationId: updateBookState
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/BookState'
+        required: true
+      responses:
+        '404':
+          description: Theme not found
+          content: { }
+  /book-state/{id}:
+    get:
+      tags:
+        - book-state
+      summary: Get book state
+      operationId: getBookStateById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookState'
+        '404':
+          description: Theme not found
+          content: { }
+    delete:
+      tags:
+        - book-state
+      summary: Deletes book state
+      operationId: deleteBookStateById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404':
+          description: Theme not found
+          content: { }
+components:
+  schemas:
+    Theme:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        update_date:
+          type: string
+          format: date-time
+    PublishingHouse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        update_date:
+          type: string
+          format: date-time
+    BookState:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        update_date:
+          type: string
+          format: date-time

@@ -14,7 +14,7 @@ import java.util.Collection;
  */
 @Setter
 @Getter
-@Entity
+@Entity(name = "Subscriber")
 @Table(name = "subscriber")
 @EntityListeners(AuditingEntityListener.class)
 public class SubscriberEntity extends BaseEntity {

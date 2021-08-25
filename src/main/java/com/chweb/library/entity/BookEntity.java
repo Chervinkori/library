@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Setter
 @Getter
-@Entity
+@Entity(name = "Book")
 @Table(name = "book")
 @EntityListeners(AuditingEntityListener.class)
 public class BookEntity extends BaseEntity {
@@ -40,6 +41,9 @@ public class BookEntity extends BaseEntity {
     @LastModifiedDate
     @Column(name = "update_date")
     private LocalDateTime updateDate;
+
+    @OneToMany(mappedBy = "book")
+    private Collection<JournalBookEntity> bookPublishers = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "publishing_house_id")

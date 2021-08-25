@@ -15,7 +15,7 @@ import java.util.Collection;
  */
 @Setter
 @Getter
-@Entity
+@Entity(name = "Theme")
 @Table(name = "theme")
 @EntityListeners(AuditingEntityListener.class)
 public class ThemeEntity extends BaseEntity {

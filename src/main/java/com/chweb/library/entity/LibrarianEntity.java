@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  */
 @Setter
 @Getter
-@Entity
+@Entity(name = "Librarian")
 @Table(name = "librarian")
 @EntityListeners(AuditingEntityListener.class)
 public class LibrarianEntity extends BaseEntity {

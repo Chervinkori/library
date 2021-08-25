@@ -31,16 +31,16 @@ COMMENT ON TABLE theme IS 'Тема книги';
 -- Автор книги
 CREATE TABLE author
 (
-    id          serial8   NOT NULL,
-    first_name  varchar   NOT NULL,
+    id          serial8 NOT NULL,
+    first_name  varchar NOT NULL,
     middle_name varchar NULL,
-    last_name   varchar   NOT NULL,
-    birth_date  timestamp NOT NULL,
-    death_date  timestamp NULL,
+    last_name   varchar NOT NULL,
+    birth_date  date    NOT NULL,
+    death_date  date NULL,
     description varchar NULL,
     create_date timestamp NULL,
     update_date timestamp NULL,
-    active      bool      NOT NULL DEFAULT true,
+    active      bool    NOT NULL DEFAULT true,
     CONSTRAINT author_pk PRIMARY KEY (id)
 );
 CREATE INDEX author_active_idx ON author (active);
@@ -90,17 +90,17 @@ COMMENT ON TABLE book_theme IS 'Связь "Книга - Тема"';
 -- Библиотекарь
 CREATE TABLE librarian
 (
-    id              serial8   NOT NULL,
-    first_name      varchar   NOT NULL,
+    id              serial8 NOT NULL,
+    first_name      varchar NOT NULL,
     middle_name     varchar NULL,
-    last_name       varchar   NOT NULL,
-    phone_number    varchar   NOT NULL,
-    address         varchar   NOT NULL,
-    employment_date timestamp NOT NULL,
-    dismissal_date  timestamp NULL,
+    last_name       varchar NOT NULL,
+    phone_number    varchar NOT NULL,
+    address         varchar NOT NULL,
+    employment_date date    NOT NULL,
+    dismissal_date  date NULL,
     create_date     timestamp NULL,
     update_date     timestamp NULL,
-    active          bool      NOT NULL DEFAULT true,
+    active          bool    NOT NULL DEFAULT true,
     CONSTRAINT librarian_pk PRIMARY KEY (id)
 );
 CREATE INDEX librarian_active_idx ON librarian (active);
@@ -109,17 +109,17 @@ COMMENT ON TABLE librarian IS 'Библиотекарь';
 -- Читатель (абонент)
 CREATE TABLE subscriber
 (
-    id            serial8   NOT NULL,
-    first_name    varchar   NOT NULL,
+    id            serial8 NOT NULL,
+    first_name    varchar NOT NULL,
     middle_name   varchar NULL,
-    last_name     varchar   NOT NULL,
-    birth_date    timestamp NOT NULL,
-    passport_data varchar   NOT NULL,
-    phone_number  varchar   NOT NULL,
-    address       varchar   NOT NULL,
+    last_name     varchar NOT NULL,
+    birth_date    date    NOT NULL,
+    passport_data varchar NOT NULL,
+    phone_number  varchar NOT NULL,
+    address       varchar NOT NULL,
     create_date   timestamp NULL,
     update_date   timestamp NULL,
-    active        bool      NOT NULL DEFAULT true,
+    active        bool    NOT NULL DEFAULT true,
     CONSTRAINT subscriber_pk PRIMARY KEY (id)
 );
 CREATE INDEX subscriber_active_idx ON subscriber (active);
@@ -128,13 +128,13 @@ COMMENT ON TABLE subscriber IS 'Читатель (абонент)';
 -- Журнал выдачи
 CREATE TABLE journal
 (
-    id            serial8   NOT NULL,
-    librarian_id  int8      NOT NULL,
-    subscriber_id int8      NOT NULL,
-    issue_date    timestamp NOT NULL,
+    id            serial8 NOT NULL,
+    librarian_id  int8    NOT NULL,
+    subscriber_id int8    NOT NULL,
+    issue_date    date    NOT NULL,
     create_date   timestamp NULL,
     update_date   timestamp NULL,
-    active        bool      NOT NULL DEFAULT true,
+    active        bool    NOT NULL DEFAULT true,
     CONSTRAINT journal_pk PRIMARY KEY (id),
     CONSTRAINT journal_librarian_fk FOREIGN KEY (librarian_id) REFERENCES librarian (id),
     CONSTRAINT journal_subscriber_fk FOREIGN KEY (subscriber_id) REFERENCES subscriber (id)
@@ -159,13 +159,13 @@ COMMENT ON TABLE book_state IS 'Справочник состояний книг
 -- Связь "Журнал выдачи - Книга"
 CREATE TABLE journal_book
 (
-    journal_id    int8      NOT NULL,
-    book_id       int8      NOT NULL,
-    return_date   timestamp NOT NULL,
-    book_state_id int8      NOT NULL,
+    journal_id    int8 NOT NULL,
+    book_id       int8 NOT NULL,
+    return_date   date NOT NULL,
+    book_state_id int8 NOT NULL,
     create_date   timestamp NULL,
     update_date   timestamp NULL,
-    active        bool      NOT NULL DEFAULT true,
+    active        bool NOT NULL DEFAULT true,
     CONSTRAINT journal_book_pk PRIMARY KEY (journal_id, book_id),
     CONSTRAINT journal_book_jornal_fk FOREIGN KEY (journal_id) REFERENCES journal (id),
     CONSTRAINT journal_book_book_fk FOREIGN KEY (book_id) REFERENCES book (id),

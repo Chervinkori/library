@@ -5,7 +5,7 @@ spring:
     show-sql: true
     generate-ddl: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
   flyway:
     enabled: true
     locations: filesystem:src/main/resources/migration
