@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.chweb</groupId>
     <artifactId>library</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>library</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Library management system</description>
 
     <properties>
         <java.version>11</java.version>
@@ -41,9 +41,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.2</version>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -112,9 +112,7 @@
                             <generatorName>spring</generatorName>
                             <apiPackage>com.chweb.library.api</apiPackage>
                             <modelPackage>com.chweb.library.model</modelPackage>
-                            <supportingFilesToGenerate>
-                                ApiUtil.java
-                            </supportingFilesToGenerate>
+                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>
                                 <delegatePattern>true</delegatePattern>
                                 <useTags>true</useTags>

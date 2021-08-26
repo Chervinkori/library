@@ -1,6 +1,7 @@
 package com.chweb.library.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,6 +16,7 @@ import java.util.Collection;
  */
 @Setter
 @Getter
+@NoArgsConstructor
 @Entity(name = "Theme")
 @Table(name = "theme")
 @EntityListeners(AuditingEntityListener.class)
