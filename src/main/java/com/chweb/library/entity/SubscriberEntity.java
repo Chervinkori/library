@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 /**
+ * Book recipient.
+ *
  * @author chervinko <br>
  * 18.08.2021
  */

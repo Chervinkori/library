@@ -1,16 +1,15 @@
 package com.chweb.library.handler;
 
+import com.chweb.library.dto.response.ResponseErrorDTO;
+import com.chweb.library.service.crud.exception.EntityNotFoundException;
+import com.chweb.library.service.crud.exception.MissingRequiredParameterException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
 
-import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 
 /**
  * @author chervinko <br>
@@ -18,31 +17,42 @@ import javax.validation.ConstraintViolationException;
  */
 @ControllerAdvice
 public class ResponseExceptionHandler {
-    @ResponseBody
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> customHandleException(Exception ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<ResponseErrorDTO> handleException(Exception exp) {
+        ResponseErrorDTO errorDTO = new ResponseErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected Server Error");
+        return new ResponseEntity<>(errorDTO, errorDTO.getStatus());
     }
 
-    @ResponseBody
     @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<ResponseErrorDTO> handleEntityNotFoundException(EntityNotFoundException exp) {
+        ResponseErrorDTO errorDTO = new ResponseErrorDTO(HttpStatus.NOT_FOUND, "Not found", exp.getMessage());
+        return new ResponseEntity<>(errorDTO, errorDTO.getStatus());
     }
 
-    @ResponseBody
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public ResponseEntity<ResponseSuccessDTO> handleIllegalArgumentException(IllegalArgumentException exp) {
+//        ResponseErrorDTO errorDTO = new ResponseErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected Server Error");
+//        return new ResponseEntity<>(errorDTO, errorDTO.getStatus());
+//    }
+
+    @ExceptionHandler(MissingRequiredParameterException.class)
+    public ResponseEntity<ResponseErrorDTO> handleMissingRequiredParameterException(MissingRequiredParameterException exp) {
+        String[] errors = Arrays.stream(exp.getParams())
+                .map(param -> "The '" + param + "' parameter is required")
+                .toArray(String[]::new);
+
+        ResponseErrorDTO errorDTO = new ResponseErrorDTO(HttpStatus.BAD_REQUEST, "Missing required parameter", errors);
+        return new ResponseEntity<>(errorDTO, errorDTO.getStatus());
     }
 
-    @ResponseBody
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ResponseErrorDTO> handleBindException(BindException exp) {
+        String[] errors = exp.getFieldErrors()
+                .stream()
+                .map(error -> "Parameter '" + error.getField() + "' " + error.getDefaultMessage())
+                .toArray(String[]::new);
+
+        ResponseErrorDTO errorDTO = new ResponseErrorDTO(HttpStatus.BAD_REQUEST, "Validation error", errors);
+        return new ResponseEntity<>(errorDTO, errorDTO.getStatus());
     }
 }

@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 /**
+ * The topic of the book.
+ *
  * @author chervinko <br>
  * 18.08.2021
  */
@@ -26,7 +28,7 @@ public class ThemeEntity extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "description")

@@ -38,9 +38,12 @@ paths:
               $ref: '#/components/schemas/Theme'
         required: true
       responses:
-        default:
+        '200':
           description: Successful operation
-          content: { }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Theme'
       x-codegen-request-body-name: body
     put:
       tags:
@@ -54,9 +57,12 @@ paths:
               $ref: '#/components/schemas/Theme'
         required: true
       responses:
-        '404':
-          description: Theme not found
-          content: { }
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Theme'
   /theme/{id}:
     get:
       tags:
@@ -139,9 +145,12 @@ paths:
               $ref: '#/components/schemas/PublishingHouse'
         required: true
       responses:
-        default:
+        '200':
           description: Successful operation
-          content: { }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishingHouse'
       x-codegen-request-body-name: body
     put:
       tags:
@@ -155,9 +164,12 @@ paths:
               $ref: '#/components/schemas/PublishingHouse'
         required: true
       responses:
-        '404':
-          description: Theme not found
-          content: { }
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishingHouse'
   /publishing-house/{id}:
     get:
       tags:
@@ -228,9 +240,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/BookState'
-        '404':
-          description: Theme not found
-          content: { }
     post:
       tags:
         - book-state
@@ -243,9 +252,12 @@ paths:
               $ref: '#/components/schemas/BookState'
         required: true
       responses:
-        default:
+        '200':
           description: Successful operation
-          content: { }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookState'
       x-codegen-request-body-name: body
     put:
       tags:
@@ -259,14 +271,17 @@ paths:
               $ref: '#/components/schemas/BookState'
         required: true
       responses:
-        '404':
-          description: Theme not found
-          content: { }
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookState'
   /book-state/{id}:
     get:
       tags:
         - book-state
-      summary: Get bookstate by id
+      summary: Get publishinghouse by id
       operationId: getBookStateById
       parameters:
         - name: id
@@ -302,7 +317,7 @@ paths:
     get:
       tags:
         - book-state
-      summary: Get bookstate by name
+      summary: Get publishinghouse by name
       operationId: getBookStateByName
       parameters:
         - name: name

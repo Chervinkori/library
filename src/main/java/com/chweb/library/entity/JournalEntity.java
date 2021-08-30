@@ -12,6 +12,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
+ * Book issuing journal.
+ *
  * @author chervinko <br>
  * 18.08.2021
  */

@@ -1,9 +1,10 @@
-package com.chweb.library.api;
+package com.chweb.library.controller;
 
 import com.chweb.library.entity.BookStateEntity;
 import com.chweb.library.model.BookState;
 import com.chweb.library.repository.BookStateRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
-public class BookStateApiControllerTest {
-    private static final BookState model = new BookState();
-
-    static {
-        model.setName("name");
-        model.setDescription("description");
-    }
+public class BookStateControllerTest {
+    private final BookState model = new BookState();
+    private final BookStateEntity entity = new BookStateEntity();
 
     @Autowired
     private MockMvc mvc;
@@ -45,60 +42,58 @@ public class BookStateApiControllerTest {
     @Autowired
     private BookStateRepository bookStateRepository;
 
-    private BookStateEntity createEntity() {
-        BookStateEntity entity = new BookStateEntity();
+    @Before
+    public void initData() {
+        model.setName("name");
+        model.setDescription("description");
+
         entity.setName(model.getName());
         entity.setDescription(model.getDescription());
-        bookStateRepository.saveAndFlush(entity);
-
-        return entity;
+        bookStateRepository.save(entity);
     }
 
     @Test
     public void createBookStateTest() throws Exception {
+        model.setName("newName");
         mvc.perform(post("/book-state")
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
-                .andExpect(status().isOk());
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name", is(model.getName())));
     }
 
     @Test
-    public void deleteBookStateByIdTest() throws Exception {
-        BookStateEntity entity = createEntity();
+    public void deleteBookStateById() throws Exception {
         mvc.perform(delete("/book-state/{id}", entity.getId()))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void getBookStateByIdTest() throws Exception {
-        BookStateEntity entity = createEntity();
+    public void getBookStateById() throws Exception {
         mvc.perform(get("/book-state/{id}", entity.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", is(entity.getName())));
     }
 
     @Test
-    public void getBookStateByNameTest() throws Exception {
-        BookStateEntity entity = createEntity();
+    public void getBookStateByName() throws Exception {
         mvc.perform(get("/book-state/name/{name}", entity.getName()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(entity.getId().intValue())));
     }
 
     @Test
-    public void getBookStatesTest() throws Exception {
-        createEntity();
+    public void getBookStates() throws Exception {
         mvc.perform(get("/book-state"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").isString());
+                .andExpect(jsonPath("$[0].name", is(entity.getName())));
     }
 
     @Test
-    public void updateBookStatedTest() throws Exception {
-        BookStateEntity entity = createEntity();
+    public void updateBookStated() throws Exception {
         model.setId(entity.getId());
         model.setName("updateName");
         mvc.perform(put("/book-state")
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
                 .andExpect(status().isOk());
 
         BookStateEntity updateEntity = bookStateRepository.getById(entity.getId());

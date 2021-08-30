@@ -82,6 +82,12 @@
             <artifactId>springfox-boot-starter</artifactId>
             <version>3.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.9</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -108,14 +114,14 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi.yml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yml</inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>com.chweb.library.api</apiPackage>
                             <modelPackage>com.chweb.library.model</modelPackage>
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>
-                                <delegatePattern>true</delegatePattern>
-                                <useTags>true</useTags>
+                                <interfaceOnly>true</interfaceOnly>
+<!--                                <delegatePattern>true</delegatePattern>-->
                             </configOptions>
                         </configuration>
                     </execution>

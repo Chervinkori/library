@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 /**
+ * Book author.
+ *
  * @author chervinko <br>
  * 18.08.2021
  */

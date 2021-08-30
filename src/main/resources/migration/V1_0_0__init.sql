@@ -153,6 +153,7 @@ CREATE TABLE book_state
     active      bool    NOT NULL DEFAULT true,
     CONSTRAINT ref_book_state_pk PRIMARY KEY (id)
 );
+CREATE UNIQUE INDEX book_state_name_unq ON book_state ("name");
 CREATE INDEX ref_book_state_active_idx ON book_state (active);
 COMMENT ON TABLE book_state IS 'Справочник состояний книги';
 

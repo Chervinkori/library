@@ -1,9 +1,10 @@
-package com.chweb.library.api;
+package com.chweb.library.controller;
 
 import com.chweb.library.entity.PublishingHouseEntity;
 import com.chweb.library.model.PublishingHouse;
 import com.chweb.library.repository.PublishingHouseRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,13 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
-public class PublishingHouseApiControllerTest {
-    private static final PublishingHouse model = new PublishingHouse();
-
-    static {
-        model.setName("name");
-        model.setDescription("description");
-    }
+public class PublishingHouseControllerTest {
+    private final PublishingHouse model = new PublishingHouse();
+    private final PublishingHouseEntity entity = new PublishingHouseEntity();
 
     @Autowired
     private MockMvc mvc;
@@ -45,60 +42,58 @@ public class PublishingHouseApiControllerTest {
     @Autowired
     PublishingHouseRepository publishingHouseRepository;
 
-    private PublishingHouseEntity createEntity() {
-        PublishingHouseEntity entity = new PublishingHouseEntity();
+    @Before
+    public void initData() {
+        model.setName("name");
+        model.setDescription("description");
+
         entity.setName(model.getName());
         entity.setDescription(model.getDescription());
         publishingHouseRepository.save(entity);
-
-        return entity;
     }
 
     @Test
-    public void createPublishingHouseTest() throws Exception {
+    public void createPublishingHouse() throws Exception {
+        model.setName("newName");
         mvc.perform(post("/publishing-house")
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
-                .andExpect(status().isOk());
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name", is(model.getName())));
     }
 
     @Test
-    public void deletePublishingHouseByIdTest() throws Exception {
-        PublishingHouseEntity entity = createEntity();
+    public void deletePublishingHouseById() throws Exception {
         mvc.perform(delete("/publishing-house/{id}", entity.getId()))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void getPublishingHouseByIdTest() throws Exception {
-        PublishingHouseEntity entity = createEntity();
+    public void getPublishingHouseById() throws Exception {
         mvc.perform(get("/publishing-house/{id}", entity.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", is(entity.getName())));
     }
 
     @Test
-    public void getPublishingHouseByNameTest() throws Exception {
-        PublishingHouseEntity entity = createEntity();
+    public void getPublishingHouseByName() throws Exception {
         mvc.perform(get("/publishing-house/name/{name}", entity.getName()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(entity.getId().intValue())));
     }
 
     @Test
-    public void getPublishingHousesTest() throws Exception {
-        createEntity();
+    public void getPublishingHouses() throws Exception {
         mvc.perform(get("/publishing-house"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").isString());
+                .andExpect(jsonPath("$[0].name", is(entity.getName())));
     }
 
     @Test
-    public void updatePublishingHouseTest() throws Exception {
-        PublishingHouseEntity entity = createEntity();
+    public void updatePublishingHouse() throws Exception {
         model.setId(entity.getId());
         model.setName("updateName");
         mvc.perform(put("/publishing-house")
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
                 .andExpect(status().isOk());
 
         PublishingHouseEntity updateEntity = publishingHouseRepository.getById(entity.getId());

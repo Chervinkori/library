@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
+ * Library employee.
+ *
  * @author chervinko <br>
  * 18.08.2021
  */
