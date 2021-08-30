@@ -11,7 +11,8 @@ CREATE TABLE publishing_house
 );
 CREATE UNIQUE INDEX publishing_house_name_unq ON publishing_house ("name");
 CREATE INDEX publishing_house_active_idx ON publishing_house (active);
-COMMENT ON TABLE publishing_house IS 'Издательство';
+COMMENT
+ON TABLE publishing_house IS 'Издательство';
 
 -- Тема книги
 CREATE TABLE theme
@@ -26,7 +27,8 @@ CREATE TABLE theme
 );
 CREATE UNIQUE INDEX theme_name_unq ON theme ("name");
 CREATE INDEX theme_active_idx ON theme (active);
-COMMENT ON TABLE theme IS 'Тема книги';
+COMMENT
+ON TABLE theme IS 'Тема книги';
 
 -- Автор книги
 CREATE TABLE author
@@ -44,7 +46,8 @@ CREATE TABLE author
     CONSTRAINT author_pk PRIMARY KEY (id)
 );
 CREATE INDEX author_active_idx ON author (active);
-COMMENT ON TABLE author IS 'Автор книги';
+COMMENT
+ON TABLE author IS 'Автор книги';
 
 -- Книга
 CREATE TABLE book
@@ -63,7 +66,8 @@ CREATE TABLE book
 );
 CREATE INDEX book_active_idx ON book (active);
 CREATE INDEX book_amount_idx ON book (amount);
-COMMENT ON TABLE book IS 'Книга';
+COMMENT
+ON TABLE book IS 'Книга';
 
 -- Связь "Книга - Автор"
 CREATE TABLE book_author
@@ -74,7 +78,8 @@ CREATE TABLE book_author
     CONSTRAINT book_author_book_fk FOREIGN KEY (book_id) REFERENCES book (id),
     CONSTRAINT book_author_author_fk FOREIGN KEY (author_id) REFERENCES author (id)
 );
-COMMENT ON TABLE book_author IS 'Связь "Книга - Автор"';
+COMMENT
+ON TABLE book_author IS 'Связь "Книга - Автор"';
 
 -- Связь "Книга - Тема"
 CREATE TABLE book_theme
@@ -85,7 +90,8 @@ CREATE TABLE book_theme
     CONSTRAINT book_theme_book_fk FOREIGN KEY (book_id) REFERENCES book (id),
     CONSTRAINT book_theme_theme_fk FOREIGN KEY (theme_id) REFERENCES theme (id)
 );
-COMMENT ON TABLE book_theme IS 'Связь "Книга - Тема"';
+COMMENT
+ON TABLE book_theme IS 'Связь "Книга - Тема"';
 
 -- Библиотекарь
 CREATE TABLE librarian
@@ -104,7 +110,8 @@ CREATE TABLE librarian
     CONSTRAINT librarian_pk PRIMARY KEY (id)
 );
 CREATE INDEX librarian_active_idx ON librarian (active);
-COMMENT ON TABLE librarian IS 'Библиотекарь';
+COMMENT
+ON TABLE librarian IS 'Библиотекарь';
 
 -- Читатель (абонент)
 CREATE TABLE subscriber
@@ -123,7 +130,8 @@ CREATE TABLE subscriber
     CONSTRAINT subscriber_pk PRIMARY KEY (id)
 );
 CREATE INDEX subscriber_active_idx ON subscriber (active);
-COMMENT ON TABLE subscriber IS 'Читатель (абонент)';
+COMMENT
+ON TABLE subscriber IS 'Читатель (абонент)';
 
 -- Журнал выдачи
 CREATE TABLE journal
@@ -140,7 +148,8 @@ CREATE TABLE journal
     CONSTRAINT journal_subscriber_fk FOREIGN KEY (subscriber_id) REFERENCES subscriber (id)
 );
 CREATE INDEX journal_active_idx ON journal (active);
-COMMENT ON TABLE journal IS 'Журнал выдачи';
+COMMENT
+ON TABLE journal IS 'Журнал выдачи';
 
 -- Справочник состояний книги
 CREATE TABLE book_state
@@ -155,7 +164,8 @@ CREATE TABLE book_state
 );
 CREATE UNIQUE INDEX book_state_name_unq ON book_state ("name");
 CREATE INDEX ref_book_state_active_idx ON book_state (active);
-COMMENT ON TABLE book_state IS 'Справочник состояний книги';
+COMMENT
+ON TABLE book_state IS 'Справочник состояний книги';
 
 -- Связь "Журнал выдачи - Книга"
 CREATE TABLE journal_book
@@ -173,4 +183,5 @@ CREATE TABLE journal_book
     CONSTRAINT journal_book_book_state_fk FOREIGN KEY (book_state_id) REFERENCES book_state (id)
 );
 CREATE INDEX journal_book_active_idx ON journal_book (active);
-COMMENT ON TABLE journal_book IS 'Связь "Журнал выдачи - Книга"';
+COMMENT
+ON TABLE journal_book IS 'Связь "Журнал выдачи - Книга"';
