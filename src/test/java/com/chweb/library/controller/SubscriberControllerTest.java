@@ -1,9 +1,9 @@
 package com.chweb.library.controller;
 
-import com.chweb.library.dto.author.AuthorCreateRequestDTO;
-import com.chweb.library.dto.author.AuthorUpdateRequestDTO;
-import com.chweb.library.entity.AuthorEntity;
-import com.chweb.library.repository.AuthorRepository;
+import com.chweb.library.dto.subscriber.SubscriberCreateRequestDTO;
+import com.chweb.library.dto.subscriber.SubscriberUpdateRequestDTO;
+import com.chweb.library.entity.SubscriberEntity;
+import com.chweb.library.repository.SubscriberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,16 +26,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * @author chervinko <br>
- * 26.08.2021
+ * 30.08.2021
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
-public class AuthorControllerTest {
-    private final AuthorEntity entity = new AuthorEntity();
-    private final AuthorCreateRequestDTO createRequestDTO = new AuthorCreateRequestDTO();
-    private final AuthorUpdateRequestDTO updateRequestDTO = new AuthorUpdateRequestDTO();
+public class SubscriberControllerTest {
+    private final SubscriberEntity entity = new SubscriberEntity();
+    private final SubscriberCreateRequestDTO createRequestDTO = new SubscriberCreateRequestDTO();
+    private final SubscriberUpdateRequestDTO updateRequestDTO = new SubscriberUpdateRequestDTO();
 
     @Autowired
     private MockMvc mvc;
@@ -44,7 +44,7 @@ public class AuthorControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private AuthorRepository authorRepository;
+    private SubscriberRepository subscriberRepository;
 
     @Before
     public void initData() {
@@ -52,64 +52,68 @@ public class AuthorControllerTest {
         entity.setMiddleName("middleName");
         entity.setLastName("lastName");
         entity.setBirthDate(LocalDate.now());
-        entity.setDeathDate(LocalDate.now());
-        entity.setDescription("description");
-        authorRepository.save(entity);
+        entity.setPassportData("passportData");
+        entity.setPhoneNumber("+7 (999) 999-99-99");
+        entity.setAddress("address");
+        subscriberRepository.save(entity);
 
         createRequestDTO.setFirstName("firstName");
         createRequestDTO.setMiddleName("middleName");
         createRequestDTO.setLastName("lastName");
         createRequestDTO.setBirthDate(LocalDate.now());
-        createRequestDTO.setDeathDate(LocalDate.now());
-        createRequestDTO.setDescription("description");
+        createRequestDTO.setPassportData("passportData");
+        createRequestDTO.setPhoneNumber("+7 (999) 999-99-99");
+        createRequestDTO.setAddress("address");
 
         updateRequestDTO.setId(entity.getId());
         updateRequestDTO.setFirstName("updateFirstName");
         updateRequestDTO.setMiddleName("updateMiddleName");
         updateRequestDTO.setLastName("updateLastName");
         updateRequestDTO.setBirthDate(LocalDate.now());
-        updateRequestDTO.setDeathDate(LocalDate.now());
-        updateRequestDTO.setDescription("description");
+        updateRequestDTO.setPassportData("updatePassportData");
+        updateRequestDTO.setPhoneNumber("+7 (999) 999-99-99");
+        updateRequestDTO.setAddress("updateAddress");
     }
 
     @Test
     public void getById() throws Exception {
-        mvc.perform(get("/author/{id}", entity.getId()))
+        mvc.perform(get("/subscriber/{id}", entity.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data.first_name", is(entity.getFirstName())));
     }
 
     @Test
     public void getAll() throws Exception {
-        mvc.perform(get("/author"))
+        mvc.perform(get("/subscriber"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data[0].first_name", is(entity.getFirstName())));
     }
 
     @Test
     public void getAllWithPageable() throws Exception {
-        AuthorEntity newEntity = null;
+        SubscriberEntity newEntity = null;
         for (int i = 0; i < 4; i++) {
-            newEntity = new AuthorEntity();
+            newEntity = new SubscriberEntity();
             newEntity.setFirstName("firstName" + i);
             newEntity.setMiddleName("middleName" + i);
             newEntity.setLastName("lastName" + i);
             newEntity.setBirthDate(LocalDate.now());
-            newEntity.setDeathDate(LocalDate.now());
-            newEntity.setDescription("description" + i);
-            authorRepository.save(newEntity);
+            newEntity.setPassportData("passportData" + i);
+            newEntity.setPhoneNumber("+7 (999) 999-99-99");
+            newEntity.setAddress("address" + i);
+            subscriberRepository.save(newEntity);
         }
 
-        mvc.perform(get("/author?page={page}&size={size}", 4, 1))
+        mvc.perform(get("/subscriber?page={page}&size={size}", 4, 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("meta.pageable.total_elements",
-                        is(authorRepository.findAllByActiveIsTrue().size())))
+                        is(subscriberRepository.findAllByActiveIsTrue().size())))
                 .andExpect(jsonPath("data[0].first_name", is(newEntity.getFirstName())));
     }
 
     @Test
     public void create() throws Exception {
-        mvc.perform(post("/author")
+        mvc.perform(post("/subscriber")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data.first_name", is(createRequestDTO.getFirstName())));
@@ -117,17 +121,17 @@ public class AuthorControllerTest {
 
     @Test
     public void update() throws Exception {
-        mvc.perform(put("/author")
+        mvc.perform(put("/subscriber")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateRequestDTO)))
                 .andExpect(status().isOk());
 
-        AuthorEntity entity = authorRepository.getById(updateRequestDTO.getId());
+        SubscriberEntity entity = subscriberRepository.getById(updateRequestDTO.getId());
         assertEquals(entity.getFirstName(), updateRequestDTO.getFirstName());
     }
 
     @Test
     public void deleteById() throws Exception {
-        mvc.perform(delete("/author/{id}", entity.getId()))
+        mvc.perform(delete("/subscriber/{id}", entity.getId()))
                 .andExpect(status().isOk());
     }
 }

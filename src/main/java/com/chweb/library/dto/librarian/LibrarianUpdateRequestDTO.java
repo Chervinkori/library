@@ -40,6 +40,4 @@ public class LibrarianUpdateRequestDTO {
 
     @JsonProperty("dismissal_date")
     LocalDate dismissalDate;
-
-    String description;
 }

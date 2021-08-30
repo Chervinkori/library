@@ -30,17 +30,17 @@ public class SubscriberCreateRequestDTO {
     String lastName;
 
     @NotNull
+    @JsonProperty("birth_date")
+    LocalDate birthDate;
+
+    @NotNull
+    @JsonProperty("passport_data")
+    String passportData;
+
+    @NotNull
     @JsonProperty("phone_number")
     String phoneNumber;
 
     @NotNull
     String address;
-
-    @JsonProperty("employment_date")
-    LocalDate employmentDate;
-
-    @JsonProperty("dismissal_date")
-    LocalDate dismissalDate;
-
-    String description;
 }

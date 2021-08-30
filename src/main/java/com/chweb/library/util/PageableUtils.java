@@ -21,6 +21,10 @@ public class PageableUtils {
 
         Sort sort = null;
         for (SortingDTO sorting : sortings) {
+            if (sorting.getProperties() == null || sorting.getProperties().length == 0) {
+                continue;
+            }
+
             String[] properties = Arrays.stream(sorting.getProperties())
                     .map(prop -> CaseUtils.toCamelCase(prop, false, '_').trim())
                     .distinct().filter(item -> !item.isEmpty())

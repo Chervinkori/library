@@ -29,12 +29,6 @@ public class ResponseExceptionHandler {
         return new ResponseEntity<>(errorDTO, errorDTO.getStatus());
     }
 
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    public ResponseEntity<ResponseSuccessDTO> handleIllegalArgumentException(IllegalArgumentException exp) {
-//        ResponseErrorDTO errorDTO = new ResponseErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected Server Error");
-//        return new ResponseEntity<>(errorDTO, errorDTO.getStatus());
-//    }
-
     @ExceptionHandler(MissingRequiredParameterException.class)
     public ResponseEntity<ResponseErrorDTO> handleMissingRequiredParameterException(MissingRequiredParameterException exp) {
         String[] errors = Arrays.stream(exp.getParams())

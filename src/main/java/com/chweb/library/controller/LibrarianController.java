@@ -33,9 +33,10 @@ public class LibrarianController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Get all librarian")
+    @ApiOperation(value = "Get all librarians")
     public ResponseEntity<PageableResponseDTO> getAll(@Valid PageableRequestDTO dto) {
-        return ResponseEntity.ok(librarianDbService.getAll(dto));
+        return ResponseEntity.ok(new PageableResponseDTO(librarianDbService.getAll(dto), dto.getSorting()));
+
     }
 
     @PostMapping

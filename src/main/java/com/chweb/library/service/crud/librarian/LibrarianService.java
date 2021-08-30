@@ -6,6 +6,7 @@ import com.chweb.library.dto.librarian.LibrarianUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.entity.LibrarianEntity;
+import org.springframework.data.domain.Page;
 
 /**
  * @author chervinko <br>
@@ -14,7 +15,7 @@ import com.chweb.library.entity.LibrarianEntity;
 public interface LibrarianService {
     LibrarianResponseDTO getById(Long id);
 
-    PageableResponseDTO getAll(PageableRequestDTO dto);
+    Page<LibrarianResponseDTO> getAll(PageableRequestDTO dto);
 
     LibrarianResponseDTO create(LibrarianCreateRequestDTO dto);
 

@@ -3,6 +3,7 @@ package com.chweb.library.controller;
 import com.chweb.library.dto.librarian.LibrarianCreateRequestDTO;
 import com.chweb.library.dto.librarian.LibrarianUpdateRequestDTO;
 import com.chweb.library.entity.LibrarianEntity;
+import com.chweb.library.repository.LibrarianRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class LibrarianControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private com.chweb.library.repository.LibrarianRepository librarianRepository;
+    private LibrarianRepository librarianRepository;
 
     @Before
     public void initData() {
@@ -75,14 +76,14 @@ public class LibrarianControllerTest {
     public void getById() throws Exception {
         mvc.perform(get("/librarian/{id}", entity.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("content.first_name", is(entity.getFirstName())));
+                .andExpect(jsonPath("data.first_name", is(entity.getFirstName())));
     }
 
     @Test
     public void getAll() throws Exception {
         mvc.perform(get("/librarian"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("content[0].first_name", is(entity.getFirstName())));
+                .andExpect(jsonPath("data[0].first_name", is(entity.getFirstName())));
     }
 
     @Test
@@ -103,7 +104,7 @@ public class LibrarianControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("meta.pageable.total_elements",
                         is(librarianRepository.findAllByActiveIsTrue().size())))
-                .andExpect(jsonPath("content[0].first_name", is(newEntity.getFirstName())));
+                .andExpect(jsonPath("data[0].first_name", is(newEntity.getFirstName())));
     }
 
     @Test
@@ -111,7 +112,7 @@ public class LibrarianControllerTest {
         mvc.perform(post("/librarian")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("content.first_name", is(createRequestDTO.getFirstName())));
+                .andExpect(jsonPath("data.first_name", is(createRequestDTO.getFirstName())));
     }
 
     @Test

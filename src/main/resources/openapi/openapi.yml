@@ -23,9 +23,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Theme'
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Theme'
+                  meta:
+                    type: object
     post:
       tags:
         - theme
@@ -43,7 +47,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Theme'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Theme'
       x-codegen-request-body-name: body
     put:
       tags:
@@ -62,7 +68,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Theme'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Theme'
   /theme/{id}:
     get:
       tags:
@@ -82,7 +90,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Theme'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Theme'
     delete:
       tags:
         - theme
@@ -117,7 +127,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Theme'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Theme'
   /publishing-house:
     get:
       tags:
@@ -130,9 +142,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PublishingHouse'
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublishingHouse'
+                  meta:
+                    type: object
     post:
       tags:
         - publishing-house
@@ -150,7 +166,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublishingHouse'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PublishingHouse'
       x-codegen-request-body-name: body
     put:
       tags:
@@ -169,7 +187,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublishingHouse'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PublishingHouse'
   /publishing-house/{id}:
     get:
       tags:
@@ -189,7 +209,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublishingHouse'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PublishingHouse'
     delete:
       tags:
         - publishing-house
@@ -224,7 +246,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublishingHouse'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PublishingHouse'
   /book-state:
     get:
       tags:
@@ -237,9 +261,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BookState'
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BookState'
+                  meta:
+                    type: object
     post:
       tags:
         - book-state
@@ -257,7 +285,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookState'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BookState'
       x-codegen-request-body-name: body
     put:
       tags:
@@ -276,7 +306,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookState'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BookState'
   /book-state/{id}:
     get:
       tags:
@@ -296,7 +328,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookState'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BookState'
     delete:
       tags:
         - book-state
@@ -331,7 +365,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookState'
+                properties:
+                  data:
+                    $ref: '#/components/schemas/BookState'
 components:
   schemas:
     Theme:

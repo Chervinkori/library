@@ -35,7 +35,7 @@ public class AuthorController {
     @GetMapping
     @ApiOperation(value = "Get all author")
     public ResponseEntity<PageableResponseDTO> getAll(@Valid PageableRequestDTO dto) {
-        return ResponseEntity.ok(authorDbService.getAll(dto));
+        return ResponseEntity.ok(new PageableResponseDTO(authorDbService.getAll(dto), dto.getSorting()));
     }
 
     @PostMapping

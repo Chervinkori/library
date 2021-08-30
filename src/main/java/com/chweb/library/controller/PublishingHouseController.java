@@ -1,6 +1,7 @@
 package com.chweb.library.controller;
 
 import com.chweb.library.api.PublishingHouseApi;
+import com.chweb.library.dto.response.ResponseSuccessDTO;
 import com.chweb.library.model.PublishingHouse;
 import com.chweb.library.service.crud.bookstate.PublishingHouseDbService;
 import io.swagger.annotations.Api;
@@ -8,9 +9,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author chervinko <br>
@@ -26,8 +24,8 @@ public class PublishingHouseController implements PublishingHouseApi {
 
     @Override
     @ApiOperation(value = "Create publishing house")
-    public ResponseEntity<PublishingHouse> createPublishingHouse(PublishingHouse body) {
-        return ResponseEntity.ok(publishingHouseDbService.create(body));
+    public ResponseEntity<Object> createPublishingHouse(PublishingHouse body) {
+        return ResponseEntity.ok(new ResponseSuccessDTO(publishingHouseDbService.create(body)));
     }
 
     @Override
@@ -39,25 +37,25 @@ public class PublishingHouseController implements PublishingHouseApi {
 
     @Override
     @ApiOperation(value = "Get publishing house by id")
-    public ResponseEntity<PublishingHouse> getPublishingHouseById(Long id) {
-        return ResponseEntity.ok(publishingHouseDbService.getById(id));
+    public ResponseEntity<Object> getPublishingHouseById(Long id) {
+        return ResponseEntity.ok(new ResponseSuccessDTO(publishingHouseDbService.getById(id)));
     }
 
     @Override
     @ApiOperation(value = "Get publishing house by name")
-    public ResponseEntity<PublishingHouse> getPublishingHouseByName(String name) {
-        return ResponseEntity.ok(publishingHouseDbService.getByName(name));
+    public ResponseEntity<Object> getPublishingHouseByName(String name) {
+        return ResponseEntity.ok(new ResponseSuccessDTO(publishingHouseDbService.getByName(name)));
     }
 
     @Override
     @ApiOperation(value = "Get all publishing houses")
-    public ResponseEntity<List<PublishingHouse>> getPublishingHouses() {
-        return ResponseEntity.ok(new ArrayList<>(publishingHouseDbService.getAll()));
+    public ResponseEntity<Object> getPublishingHouses() {
+        return ResponseEntity.ok(new ResponseSuccessDTO(publishingHouseDbService.getAll()));
     }
 
     @Override
     @ApiOperation(value = "Update publishing house")
-    public ResponseEntity<PublishingHouse> updatePublishingHouseById(PublishingHouse bookState) {
-        return ResponseEntity.ok(publishingHouseDbService.update(bookState));
+    public ResponseEntity<Object> updatePublishingHouseById(PublishingHouse bookState) {
+        return ResponseEntity.ok(new ResponseSuccessDTO(publishingHouseDbService.update(bookState)));
     }
 }

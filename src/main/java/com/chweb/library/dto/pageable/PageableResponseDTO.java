@@ -19,7 +19,7 @@ public class PageableResponseDTO extends ResponseSuccessDTO {
     MetaDTO meta;
 
     public PageableResponseDTO(Page<?> page, SortingDTO[] sorting) {
-        this.content = page.getContent();
+        this.data = page.getContent();
         this.meta = new MetaDTO(new PageableDTO(page.getTotalPages(),
                 page.getTotalElements(),
                 page.getNumber(),

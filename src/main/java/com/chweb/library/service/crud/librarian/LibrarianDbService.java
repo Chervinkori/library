@@ -4,7 +4,6 @@ import com.chweb.library.dto.librarian.LibrarianCreateRequestDTO;
 import com.chweb.library.dto.librarian.LibrarianResponseDTO;
 import com.chweb.library.dto.librarian.LibrarianUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
-import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.entity.AuthorEntity;
 import com.chweb.library.entity.LibrarianEntity;
 import com.chweb.library.repository.LibrarianRepository;
@@ -34,11 +33,8 @@ public class LibrarianDbService implements LibrarianService {
     }
 
     @Override
-    public PageableResponseDTO getAll(PageableRequestDTO dto) {
-        Page<LibrarianResponseDTO> page = librarianRepository.findAllByActiveIsTrue(PageableUtils.getPageRequest(dto))
-                .map(this::toResponseDTO);
-
-        return new PageableResponseDTO(page, dto.getSorting());
+    public Page<LibrarianResponseDTO> getAll(PageableRequestDTO dto) {
+        return librarianRepository.findAllByActiveIsTrue(PageableUtils.getPageRequest(dto)).map(this::toResponseDTO);
     }
 
     @Override

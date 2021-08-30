@@ -58,7 +58,7 @@ public class PublishingHouseControllerTest {
         mvc.perform(post("/publishing-house")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", is(model.getName())));
+                .andExpect(jsonPath("data.name", is(model.getName())));
     }
 
     @Test
@@ -71,21 +71,21 @@ public class PublishingHouseControllerTest {
     public void getPublishingHouseById() throws Exception {
         mvc.perform(get("/publishing-house/{id}", entity.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", is(entity.getName())));
+                .andExpect(jsonPath("data.name", is(entity.getName())));
     }
 
     @Test
     public void getPublishingHouseByName() throws Exception {
         mvc.perform(get("/publishing-house/name/{name}", entity.getName()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is(entity.getId().intValue())));
+                .andExpect(jsonPath("data.id", is(entity.getId().intValue())));
     }
 
     @Test
     public void getPublishingHouses() throws Exception {
         mvc.perform(get("/publishing-house"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name", is(entity.getName())));
+                .andExpect(jsonPath("data[0].name", is(entity.getName())));
     }
 
     @Test

@@ -4,7 +4,6 @@ import com.chweb.library.dto.author.AuthorCreateRequestDTO;
 import com.chweb.library.dto.author.AuthorResponseDTO;
 import com.chweb.library.dto.author.AuthorUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
-import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.entity.AuthorEntity;
 import com.chweb.library.repository.AuthorRepository;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
@@ -37,11 +36,8 @@ public class AuthorDbService implements AuthorService {
     }
 
     @Override
-    public PageableResponseDTO getAll(PageableRequestDTO dto) {
-        Page<AuthorResponseDTO> page = authorRepository.findAllByActiveIsTrue(PageableUtils.getPageRequest(dto))
-                .map(this::toResponseDTO);
-
-        return new PageableResponseDTO(page, dto.getSorting());
+    public Page<AuthorResponseDTO> getAll(PageableRequestDTO dto) {
+        return authorRepository.findAllByActiveIsTrue(PageableUtils.getPageRequest(dto)).map(this::toResponseDTO);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class ThemeControllerTest {
         mvc.perform(post("/theme")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", is(model.getName())));
+                .andExpect(jsonPath("data.name", is(model.getName())));
     }
 
     @Test
@@ -73,21 +73,21 @@ public class ThemeControllerTest {
         // TODO MvcResult
         MvcResult mvcResult = mvc.perform(get("/theme/{id}", entity.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("name", is(entity.getName()))).andReturn();
+                .andExpect(jsonPath("data.name", is(entity.getName()))).andReturn();
     }
 
     @Test
     public void getThemeByName() throws Exception {
         mvc.perform(get("/theme/name/{name}", entity.getName()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id", is(entity.getId().intValue())));
+                .andExpect(jsonPath("data.id", is(entity.getId().intValue())));
     }
 
     @Test
     public void getThemes() throws Exception {
         mvc.perform(get("/theme"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name", is(entity.getName())));
+                .andExpect(jsonPath("data[0].name", is(entity.getName())));
     }
 
     @Test

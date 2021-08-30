@@ -30,16 +30,14 @@ public class SubscriberUpdateRequestDTO {
     @JsonProperty("last_name")
     String lastName;
 
+    @JsonProperty("birth_date")
+    LocalDate birthDate;
+
+    @JsonProperty("passport_data")
+    String passportData;
+
     @JsonProperty("phone_number")
     String phoneNumber;
 
     String address;
-
-    @JsonProperty("employment_date")
-    LocalDate employmentDate;
-
-    @JsonProperty("dismissal_date")
-    LocalDate dismissalDate;
-
-    String description;
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -35,5 +36,6 @@ public class SubscriberResponseDTO {
     @JsonProperty("phone_number")
     String phoneNumber;
 
+    @NotNull
     String address;
 }

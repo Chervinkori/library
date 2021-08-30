@@ -6,6 +6,7 @@ import com.chweb.library.dto.author.AuthorUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.entity.AuthorEntity;
+import org.springframework.data.domain.Page;
 
 /**
  * @author chervinko <br>
@@ -14,7 +15,7 @@ import com.chweb.library.entity.AuthorEntity;
 public interface AuthorService {
     AuthorResponseDTO getById(Long id);
 
-    PageableResponseDTO getAll(PageableRequestDTO dto);
+    Page<AuthorResponseDTO> getAll(PageableRequestDTO dto);
 
     AuthorResponseDTO create(AuthorCreateRequestDTO dto);
 
