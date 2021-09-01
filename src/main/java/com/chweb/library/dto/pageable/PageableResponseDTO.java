@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class PageableResponseDTO<T> {
     List<T> data;
     MetaDTO meta;
 
-    public PageableResponseDTO(Page<T> page, SortingDTO[] sorting) {
+    public PageableResponseDTO(Page<T> page, Collection<SortingDTO> sorting) {
         this.data = page.getContent();
         this.meta = new MetaDTO(new PageableDTO(page.getTotalPages(),
                 page.getTotalElements(),

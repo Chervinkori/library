@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
+
 /**
  * @author chervinko <br>
  * 29.08.2021
@@ -13,5 +15,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MetaDTO {
     PageableDTO pageable;
-    SortingDTO[] sorting;
+    Collection<SortingDTO> sorting;
 }

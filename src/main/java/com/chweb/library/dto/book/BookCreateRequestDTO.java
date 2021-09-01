@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
+import java.util.Collection;
 
 /**
  * @author chervinko <br>
@@ -41,9 +42,9 @@ public class BookCreateRequestDTO {
 
     @NotNull
     @NotEmpty
-    Long[] themeId;
+    Collection<Long> themeId;
 
     @NotNull
     @NotEmpty
-    Long[] authorId;
+    Collection<Long> authorId;
 }

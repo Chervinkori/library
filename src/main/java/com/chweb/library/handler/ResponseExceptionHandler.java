@@ -8,6 +8,9 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 /**
  * @author chervinko <br>
  * 25.08.2021
@@ -28,10 +31,10 @@ public class ResponseExceptionHandler {
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ResponseErrorDTO> handleBindException(BindException exp) {
-        String[] errors = exp.getFieldErrors()
+        Collection<String> errors = exp.getFieldErrors()
                 .stream()
                 .map(error -> "Parameter '" + error.getField() + "' " + error.getDefaultMessage())
-                .toArray(String[]::new);
+                .collect(Collectors.toSet());
 
         ResponseErrorDTO errorDTO = new ResponseErrorDTO(TypicalError.VALIDATION_ERROR, errors);
         return new ResponseEntity<>(errorDTO, errorDTO.getStatus().getHttpStatus());
