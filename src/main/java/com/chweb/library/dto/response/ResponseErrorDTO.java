@@ -2,7 +2,6 @@ package com.chweb.library.dto.response;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 /**
  * @author chervinko <br>
@@ -11,18 +10,18 @@ import org.springframework.http.HttpStatus;
 @Data
 @NoArgsConstructor
 public class ResponseErrorDTO {
-    protected HttpStatus status;
+    protected TypicalError status;
     protected String message;
     protected String[] errors;
 
-    public ResponseErrorDTO(HttpStatus status, String message, String... errors) {
-        this.status = status;
-        this.message = message;
-        this.errors = errors;
+    public ResponseErrorDTO(TypicalError typicalError) {
+        this.status = typicalError;
+        this.message = typicalError.getTitle();
     }
 
-    public ResponseErrorDTO(HttpStatus status, String message) {
-        this.status = status;
-        this.message = message;
+    public ResponseErrorDTO(TypicalError typicalError, String... errors) {
+        this.status = typicalError;
+        this.message = typicalError.getTitle();
+        this.errors = errors;
     }
 }

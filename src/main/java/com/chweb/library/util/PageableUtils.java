@@ -14,18 +14,18 @@ import java.util.Arrays;
  * 29.08.2021
  */
 public class PageableUtils {
-    public static Sort getSort(SortingDTO[] sortings) {
-        if (sortings == null || sortings.length == 0) {
+    public static Sort getSortFromDTO(SortingDTO[] sorting) {
+        if (sorting == null || sorting.length == 0) {
             return Sort.unsorted();
         }
 
         Sort sort = null;
-        for (SortingDTO sorting : sortings) {
-            if (sorting.getProperties() == null || sorting.getProperties().length == 0) {
+        for (SortingDTO dto : sorting) {
+            if (dto.getProperties() == null || dto.getProperties().length == 0) {
                 continue;
             }
 
-            String[] properties = Arrays.stream(sorting.getProperties())
+            String[] properties = Arrays.stream(dto.getProperties())
                     .map(prop -> CaseUtils.toCamelCase(prop, false, '_').trim())
                     .distinct().filter(item -> !item.isEmpty())
                     .toArray(String[]::new);
@@ -35,25 +35,25 @@ public class PageableUtils {
             }
 
             if (sort == null) {
-                sort = Sort.by(sorting.getDirection(), properties);
+                sort = Sort.by(dto.getDirection(), properties);
             } else {
-                sort.and(Sort.by(sorting.getDirection(), properties));
+                sort.and(Sort.by(dto.getDirection(), properties));
             }
         }
 
         return sort;
     }
 
-    public static Pageable getPageRequest(PageableRequestDTO dto) {
+    public static Pageable getPageableFromDTO(PageableRequestDTO dto) {
         if (dto.getPage() == null || dto.getSize() == null) {
             return Pageable.unpaged();
         }
 
-        Sort sort = getSort(dto.getSorting());
+        Sort sort = getSortFromDTO(dto.getSorting());
         if (sort == null) {
             return PageRequest.of(dto.getPage(), dto.getSize());
         }
 
-        return PageRequest.of(dto.getPage(), dto.getSize(), getSort(dto.getSorting()));
+        return PageRequest.of(dto.getPage(), dto.getSize(), getSortFromDTO(dto.getSorting()));
     }
 }

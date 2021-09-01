@@ -27,7 +27,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Theme'
+                      $ref: '#/components/schemas/ThemeResponseDTO'
                   meta:
                     type: object
     post:
@@ -39,7 +39,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/Theme'
+              $ref: '#/components/schemas/ThemeCreateRequestDTO'
         required: true
       responses:
         '200':
@@ -47,9 +47,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Theme'
+                $ref: '#/components/schemas/ThemeResponseDTO'
       x-codegen-request-body-name: body
     put:
       tags:
@@ -60,7 +58,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/Theme'
+              $ref: '#/components/schemas/ThemeUpdateRequestDTO'
         required: true
       responses:
         '200':
@@ -68,9 +66,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Theme'
+                $ref: '#/components/schemas/ThemeResponseDTO'
   /theme/{id}:
     get:
       tags:
@@ -90,9 +86,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Theme'
+                $ref: '#/components/schemas/ThemeResponseDTO'
     delete:
       tags:
         - theme
@@ -127,9 +121,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Theme'
+                $ref: '#/components/schemas/ThemeResponseDTO'
   /publishing-house:
     get:
       tags:
@@ -146,7 +138,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/PublishingHouse'
+                      $ref: '#/components/schemas/PublishingHouseResponseDTO'
                   meta:
                     type: object
     post:
@@ -158,7 +150,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/PublishingHouse'
+              $ref: '#/components/schemas/PublishingHouseCreateRequestDTO'
         required: true
       responses:
         '200':
@@ -166,9 +158,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/PublishingHouse'
+                $ref: '#/components/schemas/PublishingHouseResponseDTO'
       x-codegen-request-body-name: body
     put:
       tags:
@@ -179,7 +169,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/PublishingHouse'
+              $ref: '#/components/schemas/PublishingHouseUpdateRequestDTO'
         required: true
       responses:
         '200':
@@ -187,9 +177,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/PublishingHouse'
+                $ref: '#/components/schemas/PublishingHouseResponseDTO'
   /publishing-house/{id}:
     get:
       tags:
@@ -209,9 +197,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/PublishingHouse'
+                $ref: '#/components/schemas/PublishingHouseResponseDTO'
     delete:
       tags:
         - publishing-house
@@ -246,9 +232,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/PublishingHouse'
+                $ref: '#/components/schemas/PublishingHouseResponseDTO'
   /book-state:
     get:
       tags:
@@ -265,7 +249,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/BookState'
+                      $ref: '#/components/schemas/BookStateResponseDTO'
                   meta:
                     type: object
     post:
@@ -277,7 +261,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/BookState'
+              $ref: '#/components/schemas/BookStateCreateRequestDTO'
         required: true
       responses:
         '200':
@@ -285,9 +269,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/BookState'
+                $ref: '#/components/schemas/BookStateResponseDTO'
       x-codegen-request-body-name: body
     put:
       tags:
@@ -298,7 +280,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/BookState'
+              $ref: '#/components/schemas/BookStateUpdateRequestDTO'
         required: true
       responses:
         '200':
@@ -306,9 +288,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/BookState'
+                $ref: '#/components/schemas/BookStateResponseDTO'
   /book-state/{id}:
     get:
       tags:
@@ -328,9 +308,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/BookState'
+                $ref: '#/components/schemas/BookStateResponseDTO'
     delete:
       tags:
         - book-state
@@ -365,12 +343,35 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  data:
-                    $ref: '#/components/schemas/BookState'
+                $ref: '#/components/schemas/BookStateResponseDTO'
 components:
   schemas:
-    Theme:
+    ThemeCreateRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+      required:
+        - name
+    ThemeUpdateRequestDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+      required:
+        - id
+        - name
+    ThemeResponseDTO:
       type: object
       properties:
         id:
@@ -380,7 +381,32 @@ components:
           type: string
         description:
           type: string
-    PublishingHouse:
+    PublishingHouseCreateRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+      required:
+        - name
+    PublishingHouseUpdateRequestDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+      required:
+        - id
+        - name
+    PublishingHouseResponseDTO:
       type: object
       properties:
         id:
@@ -390,7 +416,32 @@ components:
           type: string
         description:
           type: string
-    BookState:
+    BookStateCreateRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+      required:
+        - name
+    BookStateUpdateRequestDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+      required:
+        - id
+        - name
+    BookStateResponseDTO:
       type: object
       properties:
         id:

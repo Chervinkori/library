@@ -1,9 +1,11 @@
 package com.chweb.library.controller;
 
 import com.chweb.library.entity.ThemeEntity;
-import com.chweb.library.model.Theme;
+import com.chweb.library.model.ThemeCreateRequestDTO;
+import com.chweb.library.model.ThemeUpdateRequestDTO;
 import com.chweb.library.repository.ThemeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,8 +33,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class ThemeControllerTest {
-    private final Theme model = new Theme();
+    private static final String URL_TEMPLATE = "/theme";
+
     private final ThemeEntity entity = new ThemeEntity();
+    private final ThemeCreateRequestDTO createRequestDTO = new ThemeCreateRequestDTO();
+    private final ThemeUpdateRequestDTO updateRequestDTO = new ThemeUpdateRequestDTO();
 
     @Autowired
     private MockMvc mvc;
@@ -45,60 +50,62 @@ public class ThemeControllerTest {
 
     @Before
     public void initData() {
-        model.setName("name");
-        model.setDescription("description");
-
-        entity.setName(model.getName());
-        entity.setDescription(model.getDescription());
+        entity.setName("name");
+        entity.setDescription("description");
         themeRepository.save(entity);
+
+        createRequestDTO.setName("createName");
+        createRequestDTO.setDescription("createDescription");
+
+        updateRequestDTO.setId(entity.getId());
+        updateRequestDTO.setName("updateName");
+        updateRequestDTO.setDescription("updateDescription");
     }
 
     @Test
-    public void createTheme() throws Exception {
-        model.setName("newName");
-        mvc.perform(post("/theme")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+    public void create() throws Exception {
+        mvc.perform(post(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.name", is(model.getName())));
+                .andExpect(jsonPath("$.name", is(createRequestDTO.getName())));
     }
 
     @Test
-    public void deleteThemeById() throws Exception {
-        mvc.perform(delete("/theme/{id}", entity.getId()))
+    public void deleteById() throws Exception {
+        mvc.perform(delete(URL_TEMPLATE + "/{id}", entity.getId()))
                 .andExpect(status().isOk());
+
+        assertFalse(themeRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());
     }
 
     @Test
-    public void getThemeById() throws Exception {
-        // TODO MvcResult
-        MvcResult mvcResult = mvc.perform(get("/theme/{id}", entity.getId()))
+    public void getById() throws Exception {
+        mvc.perform(get(URL_TEMPLATE + "/{id}", entity.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.name", is(entity.getName()))).andReturn();
+                .andExpect(jsonPath("$.name", is(entity.getName())));
     }
 
     @Test
-    public void getThemeByName() throws Exception {
-        mvc.perform(get("/theme/name/{name}", entity.getName()))
+    public void getByName() throws Exception {
+        mvc.perform(get(URL_TEMPLATE + "/name/{name}", entity.getName()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.id", is(entity.getId().intValue())));
+                .andExpect(jsonPath("$.id", is(entity.getId().intValue())));
     }
 
     @Test
-    public void getThemes() throws Exception {
-        mvc.perform(get("/theme"))
+    public void getAll() throws Exception {
+        mvc.perform(get(URL_TEMPLATE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data[0].name", is(entity.getName())));
+                .andExpect(jsonPath("$.[*].name").value(Matchers.contains(entity.getName())));
     }
 
     @Test
-    public void updateTheme() throws Exception {
-        model.setId(entity.getId());
-        model.setName("updateName");
-        mvc.perform(put("/theme")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+    public void update() throws Exception {
+        mvc.perform(put(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequestDTO)))
                 .andExpect(status().isOk());
 
         ThemeEntity updateEntity = themeRepository.getById(entity.getId());
-        assertEquals(updateEntity.getName(), model.getName());
+        assertEquals(updateEntity.getName(), updateRequestDTO.getName());
     }
 }

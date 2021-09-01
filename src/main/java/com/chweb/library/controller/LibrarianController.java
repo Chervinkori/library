@@ -1,10 +1,10 @@
 package com.chweb.library.controller;
 
 import com.chweb.library.dto.librarian.LibrarianCreateRequestDTO;
+import com.chweb.library.dto.librarian.LibrarianResponseDTO;
 import com.chweb.library.dto.librarian.LibrarianUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
-import com.chweb.library.dto.response.ResponseSuccessDTO;
 import com.chweb.library.service.crud.librarian.LibrarianDbService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,27 +28,27 @@ public class LibrarianController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get librarian by id")
-    public ResponseEntity<ResponseSuccessDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(librarianDbService.getById(id)));
+    public ResponseEntity<LibrarianResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(librarianDbService.getById(id));
     }
 
     @GetMapping
     @ApiOperation(value = "Get all librarians")
-    public ResponseEntity<PageableResponseDTO> getAll(@Valid PageableRequestDTO dto) {
-        return ResponseEntity.ok(new PageableResponseDTO(librarianDbService.getAll(dto), dto.getSorting()));
+    public ResponseEntity<PageableResponseDTO<LibrarianResponseDTO>> getAll(@Valid PageableRequestDTO dto) {
+        return ResponseEntity.ok(librarianDbService.getAll(dto));
 
     }
 
     @PostMapping
     @ApiOperation(value = "Create librarian")
-    public ResponseEntity<ResponseSuccessDTO> create(@Valid @RequestBody LibrarianCreateRequestDTO dto) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(librarianDbService.create(dto)));
+    public ResponseEntity<LibrarianResponseDTO> create(@Valid @RequestBody LibrarianCreateRequestDTO dto) {
+        return ResponseEntity.ok(librarianDbService.create(dto));
     }
 
     @PutMapping
     @ApiOperation(value = "Update librarian")
-    public ResponseEntity<ResponseSuccessDTO> update(@Valid @RequestBody LibrarianUpdateRequestDTO dto) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(librarianDbService.update(dto)));
+    public ResponseEntity<LibrarianResponseDTO> update(@Valid @RequestBody LibrarianUpdateRequestDTO dto) {
+        return ResponseEntity.ok(librarianDbService.update(dto));
     }
 
     @DeleteMapping("/{id}")

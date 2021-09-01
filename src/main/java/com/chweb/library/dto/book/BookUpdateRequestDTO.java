@@ -1,4 +1,4 @@
-package com.chweb.library.dto.author;
+package com.chweb.library.dto.book;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,17 +7,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
-import java.time.LocalDate;
 
 /**
  * @author chervinko <br>
- * 26.08.2021
+ * 30.08.2021
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AuthorUpdateRequestDTO {
+public class BookUpdateRequestDTO {
     @NotNull
     @Positive
     Long id;
@@ -25,28 +24,30 @@ public class AuthorUpdateRequestDTO {
     @NotNull
     @NotBlank
     @Size(min = 2)
-    @JsonProperty("first_name")
-    String firstName;
-
-    @Size(min = 2)
-    @JsonProperty("middle_name")
-    String middleName;
+    String name;
 
     @NotNull
-    @NotBlank
-    @Size(min = 2)
-    @JsonProperty("last_name")
-    String lastName;
+    @Positive
+    @JsonProperty("publish_year")
+    Integer publishYear;
 
-    @Past
     @NotNull
-    @JsonProperty("birth_date")
-    LocalDate birthDate;
-
-    @PastOrPresent
-    @JsonProperty("death_date")
-    LocalDate deathDate;
+    @Positive
+    Integer amount;
 
     @Size(min = 2)
     String description;
+
+    @NotNull
+    @Positive
+    @JsonProperty("publishing_house_id")
+    Long publishingHouseId;
+
+    @NotNull
+    @NotEmpty
+    Long[] themeId;
+
+    @NotNull
+    @NotEmpty
+    Long[] authorId;
 }

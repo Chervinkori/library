@@ -43,7 +43,7 @@ public class BookEntity extends BaseEntity {
     private LocalDateTime updateDate;
 
     @OneToMany(mappedBy = "book")
-    private Collection<JournalBookEntity> bookPublishers = new HashSet<>();
+    private Collection<JournalBookEntity> journalBookRelations;
 
     @ManyToOne
     @JoinColumn(name = "publishing_house_id")

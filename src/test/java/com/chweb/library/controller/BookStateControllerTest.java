@@ -1,9 +1,11 @@
 package com.chweb.library.controller;
 
 import com.chweb.library.entity.BookStateEntity;
-import com.chweb.library.model.BookState;
+import com.chweb.library.model.BookStateCreateRequestDTO;
+import com.chweb.library.model.BookStateUpdateRequestDTO;
 import com.chweb.library.repository.BookStateRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,8 +33,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class BookStateControllerTest {
-    private final BookState model = new BookState();
+    private static final String URL_TEMPLATE = "/book-state";
+
     private final BookStateEntity entity = new BookStateEntity();
+    private final BookStateCreateRequestDTO createRequestDTO = new BookStateCreateRequestDTO();
+    private final BookStateUpdateRequestDTO updateRequestDTO = new BookStateUpdateRequestDTO();
 
     @Autowired
     private MockMvc mvc;
@@ -44,59 +50,62 @@ public class BookStateControllerTest {
 
     @Before
     public void initData() {
-        model.setName("name");
-        model.setDescription("description");
-
-        entity.setName(model.getName());
-        entity.setDescription(model.getDescription());
+        entity.setName("name");
+        entity.setDescription("description");
         bookStateRepository.save(entity);
+
+        createRequestDTO.setName("createName");
+        createRequestDTO.setDescription("createDescription");
+
+        updateRequestDTO.setId(entity.getId());
+        updateRequestDTO.setName("updateName");
+        updateRequestDTO.setDescription("updateDescription");
     }
 
     @Test
-    public void createBookStateTest() throws Exception {
-        model.setName("newName");
-        mvc.perform(post("/book-state")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+    public void create() throws Exception {
+        mvc.perform(post(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.name", is(model.getName())));
+                .andExpect(jsonPath("$.name", is(createRequestDTO.getName())));
     }
 
     @Test
-    public void deleteBookStateById() throws Exception {
-        mvc.perform(delete("/book-state/{id}", entity.getId()))
+    public void deleteById() throws Exception {
+        mvc.perform(delete(URL_TEMPLATE + "/{id}", entity.getId()))
                 .andExpect(status().isOk());
+
+        assertFalse(bookStateRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());
     }
 
     @Test
-    public void getBookStateById() throws Exception {
-        mvc.perform(get("/book-state/{id}", entity.getId()))
+    public void getById() throws Exception {
+        mvc.perform(get(URL_TEMPLATE + "/{id}", entity.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.name", is(entity.getName())));
+                .andExpect(jsonPath("$.name", is(entity.getName())));
     }
 
     @Test
-    public void getBookStateByName() throws Exception {
-        mvc.perform(get("/book-state/name/{name}", entity.getName()))
+    public void getByName() throws Exception {
+        mvc.perform(get(URL_TEMPLATE + "/name/{name}", entity.getName()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.id", is(entity.getId().intValue())));
+                .andExpect(jsonPath("$.id", is(entity.getId().intValue())));
     }
 
     @Test
-    public void getBookStates() throws Exception {
-        mvc.perform(get("/book-state"))
+    public void getAll() throws Exception {
+        mvc.perform(get(URL_TEMPLATE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data[0].name", is(entity.getName())));
+                .andExpect(jsonPath("$.[*].name").value(Matchers.contains(entity.getName())));
     }
 
     @Test
-    public void updateBookStated() throws Exception {
-        model.setId(entity.getId());
-        model.setName("updateName");
-        mvc.perform(put("/book-state")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+    public void update() throws Exception {
+        mvc.perform(put(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequestDTO)))
                 .andExpect(status().isOk());
 
         BookStateEntity updateEntity = bookStateRepository.getById(entity.getId());
-        assertEquals(updateEntity.getName(), model.getName());
+        assertEquals(updateEntity.getName(), updateRequestDTO.getName());
     }
 }

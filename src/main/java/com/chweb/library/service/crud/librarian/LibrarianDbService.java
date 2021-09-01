@@ -4,6 +4,7 @@ import com.chweb.library.dto.librarian.LibrarianCreateRequestDTO;
 import com.chweb.library.dto.librarian.LibrarianResponseDTO;
 import com.chweb.library.dto.librarian.LibrarianUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
+import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.entity.AuthorEntity;
 import com.chweb.library.entity.LibrarianEntity;
 import com.chweb.library.repository.LibrarianRepository;
@@ -24,17 +25,18 @@ public class LibrarianDbService implements LibrarianService {
 
     @Override
     public LibrarianResponseDTO getById(Long id) {
-        LibrarianEntity entity = librarianRepository.findByIdAndActiveIsTrue(id).orElse(null);
-        if (entity == null) {
-            throw new EntityNotFoundException(AuthorEntity.class, id);
-        }
+        LibrarianEntity entity = librarianRepository.findByIdAndActiveIsTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException(AuthorEntity.class, id));
 
         return toResponseDTO(entity);
     }
 
     @Override
-    public Page<LibrarianResponseDTO> getAll(PageableRequestDTO dto) {
-        return librarianRepository.findAllByActiveIsTrue(PageableUtils.getPageRequest(dto)).map(this::toResponseDTO);
+    public PageableResponseDTO<LibrarianResponseDTO> getAll(PageableRequestDTO dto) {
+        Page<LibrarianResponseDTO> page = librarianRepository.findAllByActiveIsTrue(PageableUtils.getPageableFromDTO(dto))
+                .map(this::toResponseDTO);
+
+        return new PageableResponseDTO<>(page, dto.getSorting());
     }
 
     @Override
@@ -53,26 +55,15 @@ public class LibrarianDbService implements LibrarianService {
 
     @Override
     public LibrarianResponseDTO update(LibrarianUpdateRequestDTO dto) {
-        LibrarianEntity entity = librarianRepository.findByIdAndActiveIsTrue(dto.getId()).orElse(null);
-        if (entity == null) {
-            throw new EntityNotFoundException(AuthorEntity.class, dto.getId());
-        }
+        LibrarianEntity entity = librarianRepository.findByIdAndActiveIsTrue(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException(AuthorEntity.class, dto.getId()));
 
-        if (dto.getFirstName() != null) {
-            entity.setFirstName(dto.getFirstName());
-        }
-        if (dto.getLastName() != null) {
-            entity.setLastName(dto.getLastName());
-        }
-        if (dto.getPhoneNumber() != null) {
-            entity.setPhoneNumber(dto.getPhoneNumber());
-        }
-        if (dto.getAddress() != null) {
-            entity.setAddress(dto.getAddress());
-        }
-        if (dto.getEmploymentDate() != null) {
-            entity.setEmploymentDate(dto.getEmploymentDate());
-        }
+        entity.setFirstName(dto.getFirstName());
+        entity.setLastName(dto.getLastName());
+        entity.setPhoneNumber(dto.getPhoneNumber());
+        entity.setAddress(dto.getAddress());
+        entity.setEmploymentDate(dto.getEmploymentDate());
+
         if (dto.getMiddleName() != null) {
             entity.setMiddleName(dto.getMiddleName());
         }
@@ -85,10 +76,9 @@ public class LibrarianDbService implements LibrarianService {
 
     @Override
     public void delete(Long id) {
-        LibrarianEntity entity = librarianRepository.findByIdAndActiveIsTrue(id).orElse(null);
-        if (entity == null) {
-            throw new EntityNotFoundException(AuthorEntity.class, id);
-        }
+        LibrarianEntity entity = librarianRepository.findByIdAndActiveIsTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException(AuthorEntity.class, id));
+
         entity.setActive(false);
         librarianRepository.save(entity);
     }

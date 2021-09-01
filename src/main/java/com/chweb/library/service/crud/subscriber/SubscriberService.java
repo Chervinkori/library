@@ -1,11 +1,11 @@
 package com.chweb.library.service.crud.subscriber;
 
 import com.chweb.library.dto.pageable.PageableRequestDTO;
+import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.dto.subscriber.SubscriberCreateRequestDTO;
 import com.chweb.library.dto.subscriber.SubscriberResponseDTO;
 import com.chweb.library.dto.subscriber.SubscriberUpdateRequestDTO;
 import com.chweb.library.entity.SubscriberEntity;
-import org.springframework.data.domain.Page;
 
 /**
  * @author chervinko <br>
@@ -14,7 +14,7 @@ import org.springframework.data.domain.Page;
 public interface SubscriberService {
     SubscriberResponseDTO getById(Long id);
 
-    Page<SubscriberResponseDTO> getAll(PageableRequestDTO dto);
+    PageableResponseDTO<SubscriberResponseDTO> getAll(PageableRequestDTO dto);
 
     SubscriberResponseDTO create(SubscriberCreateRequestDTO dto);
 

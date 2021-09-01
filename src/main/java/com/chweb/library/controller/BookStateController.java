@@ -1,14 +1,17 @@
 package com.chweb.library.controller;
 
 import com.chweb.library.api.BookStateApi;
-import com.chweb.library.dto.response.ResponseSuccessDTO;
-import com.chweb.library.model.BookState;
-import com.chweb.library.service.crud.publishinghouse.BookStateDbService;
+import com.chweb.library.model.BookStateCreateRequestDTO;
+import com.chweb.library.model.BookStateResponseDTO;
+import com.chweb.library.model.BookStateUpdateRequestDTO;
+import com.chweb.library.service.crud.bookstate.BookStateDbService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
+import javax.validation.Valid;
 
 /**
  * @author chervinko <br>
@@ -24,8 +27,8 @@ public class BookStateController implements BookStateApi {
 
     @Override
     @ApiOperation(value = "Create book state")
-    public ResponseEntity<Object> createBookState(BookState body) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(bookStateDbService.create(body)));
+    public ResponseEntity<BookStateResponseDTO> createBookState(@Valid BookStateCreateRequestDTO dto) {
+        return ResponseEntity.ok(bookStateDbService.create(dto));
     }
 
     @Override
@@ -37,25 +40,25 @@ public class BookStateController implements BookStateApi {
 
     @Override
     @ApiOperation(value = "Get book state by id")
-    public ResponseEntity<Object> getBookStateById(Long id) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(bookStateDbService.getById(id)));
+    public ResponseEntity<BookStateResponseDTO> getBookStateById(Long id) {
+        return ResponseEntity.ok(bookStateDbService.getById(id));
     }
 
     @Override
     @ApiOperation(value = "Get book state by name")
-    public ResponseEntity<Object> getBookStateByName(String name) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(bookStateDbService.getByName(name)));
+    public ResponseEntity<BookStateResponseDTO> getBookStateByName(String name) {
+        return ResponseEntity.ok(bookStateDbService.getByName(name));
     }
 
     @Override
     @ApiOperation(value = "Get all book states")
     public ResponseEntity<Object> getBookStates() {
-        return ResponseEntity.ok(new ResponseSuccessDTO(bookStateDbService.getAll()));
+        return ResponseEntity.ok(bookStateDbService.getAll());
     }
 
     @Override
     @ApiOperation(value = "Update book state")
-    public ResponseEntity<Object> updateBookState(BookState bookState) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(bookStateDbService.update(bookState)));
+    public ResponseEntity<BookStateResponseDTO> updateBookState(@Valid BookStateUpdateRequestDTO dto) {
+        return ResponseEntity.ok(bookStateDbService.update(dto));
     }
 }

@@ -4,6 +4,7 @@ import com.chweb.library.dto.author.AuthorCreateRequestDTO;
 import com.chweb.library.dto.author.AuthorResponseDTO;
 import com.chweb.library.dto.author.AuthorUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
+import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.entity.AuthorEntity;
 import com.chweb.library.repository.AuthorRepository;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
@@ -21,23 +22,20 @@ import org.springframework.stereotype.Service;
 public class AuthorDbService implements AuthorService {
     private final AuthorRepository authorRepository;
 
-    public AuthorRepository getAuthorRepository() {
-        return authorRepository;
-    }
-
     @Override
     public AuthorResponseDTO getById(Long id) {
-        AuthorEntity entity = authorRepository.findByIdAndActiveIsTrue(id).orElse(null);
-        if (entity == null) {
-            throw new EntityNotFoundException(AuthorEntity.class, id);
-        }
+        AuthorEntity entity = authorRepository.findByIdAndActiveIsTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException(AuthorEntity.class, id));
 
         return toResponseDTO(entity);
     }
 
     @Override
-    public Page<AuthorResponseDTO> getAll(PageableRequestDTO dto) {
-        return authorRepository.findAllByActiveIsTrue(PageableUtils.getPageRequest(dto)).map(this::toResponseDTO);
+    public PageableResponseDTO<AuthorResponseDTO> getAll(PageableRequestDTO dto) {
+        Page<AuthorResponseDTO> page = authorRepository.findAllByActiveIsTrue(PageableUtils.getPageableFromDTO(dto))
+                .map(this::toResponseDTO);
+
+        return new PageableResponseDTO<>(page, dto.getSorting());
     }
 
     @Override
@@ -55,22 +53,15 @@ public class AuthorDbService implements AuthorService {
 
     @Override
     public AuthorResponseDTO update(AuthorUpdateRequestDTO dto) {
-        AuthorEntity entity = authorRepository.findByIdAndActiveIsTrue(dto.getId()).orElse(null);
-        if (entity == null) {
-            throw new EntityNotFoundException(AuthorEntity.class, dto.getId());
-        }
+        AuthorEntity entity = authorRepository.findByIdAndActiveIsTrue(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException(AuthorEntity.class, dto.getId()));
 
-        if (dto.getFirstName() != null) {
-            entity.setFirstName(dto.getFirstName());
-        }
-        if (dto.getLastName() != null) {
-            entity.setLastName(dto.getLastName());
-        }
+        entity.setFirstName(dto.getFirstName());
+        entity.setLastName(dto.getLastName());
+        entity.setBirthDate(dto.getBirthDate());
+
         if (dto.getMiddleName() != null) {
             entity.setMiddleName(dto.getMiddleName());
-        }
-        if (dto.getBirthDate() != null) {
-            entity.setBirthDate(dto.getBirthDate());
         }
         if (dto.getDeathDate() != null) {
             entity.setDeathDate(dto.getDeathDate());
@@ -84,10 +75,9 @@ public class AuthorDbService implements AuthorService {
 
     @Override
     public void delete(Long id) {
-        AuthorEntity entity = authorRepository.findByIdAndActiveIsTrue(id).orElse(null);
-        if (entity == null) {
-            throw new EntityNotFoundException(AuthorEntity.class, id);
-        }
+        AuthorEntity entity = authorRepository.findByIdAndActiveIsTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException(AuthorEntity.class, id));
+
         entity.setActive(false);
         authorRepository.save(entity);
     }

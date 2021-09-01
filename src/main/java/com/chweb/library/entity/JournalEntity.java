@@ -44,5 +44,5 @@ public class JournalEntity extends BaseEntity {
     private SubscriberEntity subscriber;
 
     @OneToMany(mappedBy = "journal")
-    private Collection<JournalBookEntity> bookPublishers = new HashSet<>();
+    private Collection<JournalBookEntity> journalBookRelations;
 }

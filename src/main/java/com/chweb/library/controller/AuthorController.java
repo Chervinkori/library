@@ -1,10 +1,10 @@
 package com.chweb.library.controller;
 
 import com.chweb.library.dto.author.AuthorCreateRequestDTO;
+import com.chweb.library.dto.author.AuthorResponseDTO;
 import com.chweb.library.dto.author.AuthorUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
-import com.chweb.library.dto.response.ResponseSuccessDTO;
 import com.chweb.library.service.crud.author.AuthorDbService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,26 +28,26 @@ public class AuthorController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get author by id")
-    public ResponseEntity<ResponseSuccessDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(authorDbService.getById(id)));
+    public ResponseEntity<AuthorResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(authorDbService.getById(id));
     }
 
     @GetMapping
-    @ApiOperation(value = "Get all author")
-    public ResponseEntity<PageableResponseDTO> getAll(@Valid PageableRequestDTO dto) {
-        return ResponseEntity.ok(new PageableResponseDTO(authorDbService.getAll(dto), dto.getSorting()));
+    @ApiOperation(value = "Get all authors")
+    public ResponseEntity<PageableResponseDTO<AuthorResponseDTO>> getAll(@Valid PageableRequestDTO dto) {
+        return ResponseEntity.ok(authorDbService.getAll(dto));
     }
 
     @PostMapping
     @ApiOperation(value = "Create author")
-    public ResponseEntity<ResponseSuccessDTO> create(@Valid @RequestBody AuthorCreateRequestDTO dto) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(authorDbService.create(dto)));
+    public ResponseEntity<AuthorResponseDTO> create(@Valid @RequestBody AuthorCreateRequestDTO dto) {
+        return ResponseEntity.ok(authorDbService.create(dto));
     }
 
     @PutMapping
     @ApiOperation(value = "Update author")
-    public ResponseEntity<ResponseSuccessDTO> update(@Valid @RequestBody AuthorUpdateRequestDTO dto) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(authorDbService.update(dto)));
+    public ResponseEntity<AuthorResponseDTO> update(@Valid @RequestBody AuthorUpdateRequestDTO dto) {
+        return ResponseEntity.ok(authorDbService.update(dto));
     }
 
     @DeleteMapping("/{id}")

@@ -39,6 +39,6 @@ public class BookStateEntity extends BaseEntity {
     private LocalDateTime updateDate;
 
     @OneToMany(mappedBy = "state")
-    private Collection<JournalBookEntity> journalBook;
+    private Collection<JournalBookEntity> journalBookRelations;
 }
 

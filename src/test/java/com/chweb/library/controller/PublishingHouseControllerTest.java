@@ -1,9 +1,11 @@
 package com.chweb.library.controller;
 
 import com.chweb.library.entity.PublishingHouseEntity;
-import com.chweb.library.model.PublishingHouse;
+import com.chweb.library.model.PublishingHouseCreateRequestDTO;
+import com.chweb.library.model.PublishingHouseUpdateRequestDTO;
 import com.chweb.library.repository.PublishingHouseRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,8 +33,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class PublishingHouseControllerTest {
-    private final PublishingHouse model = new PublishingHouse();
+    private static final String URL_TEMPLATE = "/publishing-house";
+
     private final PublishingHouseEntity entity = new PublishingHouseEntity();
+    private final PublishingHouseCreateRequestDTO createRequestDTO = new PublishingHouseCreateRequestDTO();
+    private final PublishingHouseUpdateRequestDTO updateRequestDTO = new PublishingHouseUpdateRequestDTO();
 
     @Autowired
     private MockMvc mvc;
@@ -44,59 +50,62 @@ public class PublishingHouseControllerTest {
 
     @Before
     public void initData() {
-        model.setName("name");
-        model.setDescription("description");
-
-        entity.setName(model.getName());
-        entity.setDescription(model.getDescription());
+        entity.setName("name");
+        entity.setDescription("description");
         publishingHouseRepository.save(entity);
+
+        createRequestDTO.setName("createName");
+        createRequestDTO.setDescription("createDescription");
+
+        updateRequestDTO.setId(entity.getId());
+        updateRequestDTO.setName("updateName");
+        updateRequestDTO.setDescription("updateDescription");
     }
 
     @Test
-    public void createPublishingHouse() throws Exception {
-        model.setName("newName");
-        mvc.perform(post("/publishing-house")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+    public void create() throws Exception {
+        mvc.perform(post(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.name", is(model.getName())));
+                .andExpect(jsonPath("$.name", is(createRequestDTO.getName())));
     }
 
     @Test
-    public void deletePublishingHouseById() throws Exception {
-        mvc.perform(delete("/publishing-house/{id}", entity.getId()))
+    public void deleteById() throws Exception {
+        mvc.perform(delete(URL_TEMPLATE + "/{id}", entity.getId()))
                 .andExpect(status().isOk());
+
+        assertFalse(publishingHouseRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());
     }
 
     @Test
-    public void getPublishingHouseById() throws Exception {
-        mvc.perform(get("/publishing-house/{id}", entity.getId()))
+    public void getById() throws Exception {
+        mvc.perform(get(URL_TEMPLATE + "/{id}", entity.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.name", is(entity.getName())));
+                .andExpect(jsonPath("$.name", is(entity.getName())));
     }
 
     @Test
-    public void getPublishingHouseByName() throws Exception {
-        mvc.perform(get("/publishing-house/name/{name}", entity.getName()))
+    public void getByName() throws Exception {
+        mvc.perform(get(URL_TEMPLATE + "/name/{name}", entity.getName()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.id", is(entity.getId().intValue())));
+                .andExpect(jsonPath("$.id", is(entity.getId().intValue())));
     }
 
     @Test
-    public void getPublishingHouses() throws Exception {
-        mvc.perform(get("/publishing-house"))
+    public void getAll() throws Exception {
+        mvc.perform(get(URL_TEMPLATE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data[0].name", is(entity.getName())));
+                .andExpect(jsonPath("$.[*].name").value(Matchers.contains(entity.getName())));
     }
 
     @Test
-    public void updatePublishingHouse() throws Exception {
-        model.setId(entity.getId());
-        model.setName("updateName");
-        mvc.perform(put("/publishing-house")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(model)))
+    public void update() throws Exception {
+        mvc.perform(put(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequestDTO)))
                 .andExpect(status().isOk());
 
         PublishingHouseEntity updateEntity = publishingHouseRepository.getById(entity.getId());
-        assertEquals(updateEntity.getName(), model.getName());
+        assertEquals(updateEntity.getName(), updateRequestDTO.getName());
     }
 }

@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 /**
@@ -19,25 +19,44 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubscriberUpdateRequestDTO {
     @NotNull
+    @Positive
     Long id;
 
+    @NotNull
+    @NotBlank
+    @Size(min = 2)
     @JsonProperty("first_name")
     String firstName;
 
+    @Size(min = 2)
     @JsonProperty("middle_name")
     String middleName;
 
+    @NotNull
+    @NotBlank
+    @Size(min = 2)
     @JsonProperty("last_name")
     String lastName;
 
+    @NotNull
+    @Past
     @JsonProperty("birth_date")
     LocalDate birthDate;
 
+    @NotNull
+    @NotBlank
+    @Size(min = 2)
     @JsonProperty("passport_data")
     String passportData;
 
+    @NotNull
+    @NotBlank
+    @Size(min = 2)
     @JsonProperty("phone_number")
     String phoneNumber;
 
+    @NotNull
+    @NotBlank
+    @Size(min = 2)
     String address;
 }

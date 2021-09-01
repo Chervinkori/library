@@ -1,27 +1,28 @@
 package com.chweb.library.service.crud.theme;
 
 import com.chweb.library.entity.ThemeEntity;
-import com.chweb.library.model.Theme;
+import com.chweb.library.model.ThemeCreateRequestDTO;
+import com.chweb.library.model.ThemeResponseDTO;
+import com.chweb.library.model.ThemeUpdateRequestDTO;
 
 import java.util.Collection;
-
 
 /**
  * @author chervinko <br>
  * 27.08.2021
  */
 public interface ThemeService {
-    Theme getById(Long id);
+    ThemeResponseDTO getById(Long id);
 
-    Theme getByName(String name);
+    ThemeResponseDTO getByName(String name);
 
-    Collection<Theme> getAll();
+    Collection<ThemeResponseDTO> getAll();
 
-    Theme create(Theme dto);
+    ThemeResponseDTO create(ThemeCreateRequestDTO dto);
 
-    Theme update(Theme dto);
+    ThemeResponseDTO update(ThemeUpdateRequestDTO dto);
 
     void delete(Long id);
 
-    Theme toDTO(ThemeEntity entity);
+    ThemeResponseDTO toResponseDTO(ThemeEntity entity);
 }

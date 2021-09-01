@@ -2,9 +2,11 @@ package com.chweb.library.controller;
 
 import com.chweb.library.dto.author.AuthorCreateRequestDTO;
 import com.chweb.library.dto.author.AuthorUpdateRequestDTO;
+import com.chweb.library.dto.response.TypicalError;
 import com.chweb.library.entity.AuthorEntity;
 import com.chweb.library.repository.AuthorRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +22,7 @@ import java.time.LocalDate;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class AuthorControllerTest {
+    private static final String URL_TEMPLATE = "/author";
+
     private final AuthorEntity entity = new AuthorEntity();
     private final AuthorCreateRequestDTO createRequestDTO = new AuthorCreateRequestDTO();
     private final AuthorUpdateRequestDTO updateRequestDTO = new AuthorUpdateRequestDTO();
@@ -51,46 +56,45 @@ public class AuthorControllerTest {
         entity.setFirstName("firstName");
         entity.setMiddleName("middleName");
         entity.setLastName("lastName");
-        entity.setBirthDate(LocalDate.now());
+        entity.setBirthDate(LocalDate.now().minusYears(50));
         entity.setDeathDate(LocalDate.now());
         entity.setDescription("description");
         authorRepository.save(entity);
 
-        createRequestDTO.setFirstName("firstName");
-        createRequestDTO.setMiddleName("middleName");
-        createRequestDTO.setLastName("lastName");
-        createRequestDTO.setBirthDate(LocalDate.now());
+        createRequestDTO.setFirstName("createFirstName");
+        createRequestDTO.setMiddleName("createMiddleName");
+        createRequestDTO.setLastName("createLastName");
+        createRequestDTO.setBirthDate(LocalDate.now().minusYears(50));
         createRequestDTO.setDeathDate(LocalDate.now());
-        createRequestDTO.setDescription("description");
+        createRequestDTO.setDescription("createDescription");
 
         updateRequestDTO.setId(entity.getId());
         updateRequestDTO.setFirstName("updateFirstName");
         updateRequestDTO.setMiddleName("updateMiddleName");
         updateRequestDTO.setLastName("updateLastName");
-        updateRequestDTO.setBirthDate(LocalDate.now());
+        updateRequestDTO.setBirthDate(LocalDate.now().minusYears(50));
         updateRequestDTO.setDeathDate(LocalDate.now());
-        updateRequestDTO.setDescription("description");
+        updateRequestDTO.setDescription("updateDescription");
     }
 
     @Test
     public void getById() throws Exception {
-        mvc.perform(get("/author/{id}", entity.getId()))
+        mvc.perform(get(URL_TEMPLATE + "/{id}", entity.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.first_name", is(entity.getFirstName())));
+                .andExpect(jsonPath("$.first_name", is(entity.getFirstName())));
     }
 
     @Test
     public void getAll() throws Exception {
-        mvc.perform(get("/author"))
+        mvc.perform(get(URL_TEMPLATE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data[0].first_name", is(entity.getFirstName())));
+                .andExpect(jsonPath("$.data[*].first_name").value(Matchers.contains(entity.getFirstName())));
     }
 
     @Test
     public void getAllWithPageable() throws Exception {
-        AuthorEntity newEntity = null;
-        for (int i = 0; i < 4; i++) {
-            newEntity = new AuthorEntity();
+        for (int i = 1; i <= 5; i++) {
+            AuthorEntity newEntity = new AuthorEntity();
             newEntity.setFirstName("firstName" + i);
             newEntity.setMiddleName("middleName" + i);
             newEntity.setLastName("lastName" + i);
@@ -100,24 +104,39 @@ public class AuthorControllerTest {
             authorRepository.save(newEntity);
         }
 
-        mvc.perform(get("/author?page={page}&size={size}", 4, 1))
+        int totalElements = authorRepository.findAllByActiveIsTrue().size();
+
+        // Выводить по одному элементу на страницу
+        mvc.perform(get(URL_TEMPLATE).queryParam("size", "1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("meta.pageable.total_elements",
-                        is(authorRepository.findAllByActiveIsTrue().size())))
-                .andExpect(jsonPath("data[0].first_name", is(newEntity.getFirstName())));
+                .andExpect(jsonPath("$.meta.pageable").exists())
+                .andExpect(jsonPath("$.meta.pageable.total_elements", is(totalElements)))
+                .andExpect(jsonPath("$.meta.pageable.total_pages", is(totalElements)))
+                .andExpect(jsonPath("$.data[*].first_name").value(Matchers.contains(entity.getFirstName())));
+    }
+
+    @Test
+    public void createValidationError() throws Exception {
+        createRequestDTO.setBirthDate(LocalDate.now());
+        TypicalError typicalError = TypicalError.VALIDATION_ERROR;
+
+        mvc.perform(post(URL_TEMPLATE)
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createRequestDTO)))
+                .andExpect(status().is(typicalError.getHttpStatus().value()))
+                .andExpect(jsonPath("$.typical_error", is(typicalError.toString())));
     }
 
     @Test
     public void create() throws Exception {
-        mvc.perform(post("/author")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createRequestDTO)))
+        mvc.perform(post(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.first_name", is(createRequestDTO.getFirstName())));
+                .andExpect(jsonPath("$.first_name", is(createRequestDTO.getFirstName())));
     }
 
     @Test
     public void update() throws Exception {
-        mvc.perform(put("/author")
+        mvc.perform(put(URL_TEMPLATE)
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateRequestDTO)))
                 .andExpect(status().isOk());
 
@@ -127,7 +146,9 @@ public class AuthorControllerTest {
 
     @Test
     public void deleteById() throws Exception {
-        mvc.perform(delete("/author/{id}", entity.getId()))
+        mvc.perform(delete(URL_TEMPLATE + "/{id}", this.entity.getId()))
                 .andExpect(status().isOk());
+
+        assertFalse(authorRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());
     }
 }

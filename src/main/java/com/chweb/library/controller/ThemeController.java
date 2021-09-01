@@ -1,14 +1,17 @@
 package com.chweb.library.controller;
 
 import com.chweb.library.api.ThemeApi;
-import com.chweb.library.dto.response.ResponseSuccessDTO;
-import com.chweb.library.model.Theme;
+import com.chweb.library.model.ThemeCreateRequestDTO;
+import com.chweb.library.model.ThemeResponseDTO;
+import com.chweb.library.model.ThemeUpdateRequestDTO;
 import com.chweb.library.service.crud.theme.ThemeDbService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
+import javax.validation.Valid;
 
 /**
  * @author chervinko <br>
@@ -22,8 +25,8 @@ public class ThemeController implements ThemeApi {
 
     @Override
     @ApiOperation(value = "Create theme")
-    public ResponseEntity<Object> createTheme(Theme body) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(themeDbService.create(body)));
+    public ResponseEntity<ThemeResponseDTO> createTheme(@Valid ThemeCreateRequestDTO dto) {
+        return ResponseEntity.ok(themeDbService.create(dto));
     }
 
     @Override
@@ -35,25 +38,25 @@ public class ThemeController implements ThemeApi {
 
     @Override
     @ApiOperation(value = "Get theme by id")
-    public ResponseEntity<Object> getThemeById(Long id) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(themeDbService.getById(id)));
+    public ResponseEntity<ThemeResponseDTO> getThemeById(Long id) {
+        return ResponseEntity.ok(themeDbService.getById(id));
     }
 
     @Override
     @ApiOperation(value = "Get theme by name")
-    public ResponseEntity<Object> getThemeByName(String name) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(themeDbService.getByName(name)));
+    public ResponseEntity<ThemeResponseDTO> getThemeByName(String name) {
+        return ResponseEntity.ok(themeDbService.getByName(name));
     }
 
     @Override
     @ApiOperation(value = "Get all themes")
     public ResponseEntity<Object> getThemes() {
-        return ResponseEntity.ok(new ResponseSuccessDTO(themeDbService.getAll()));
+        return ResponseEntity.ok(themeDbService.getAll());
     }
 
     @Override
     @ApiOperation(value = "Update theme")
-    public ResponseEntity<Object> updateThemeById(Theme bookState) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(themeDbService.update(bookState)));
+    public ResponseEntity<ThemeResponseDTO> updateThemeById(@Valid ThemeUpdateRequestDTO dto) {
+        return ResponseEntity.ok(themeDbService.update(dto));
     }
 }

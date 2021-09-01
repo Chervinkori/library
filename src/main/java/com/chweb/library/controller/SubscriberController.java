@@ -2,8 +2,8 @@ package com.chweb.library.controller;
 
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
-import com.chweb.library.dto.response.ResponseSuccessDTO;
 import com.chweb.library.dto.subscriber.SubscriberCreateRequestDTO;
+import com.chweb.library.dto.subscriber.SubscriberResponseDTO;
 import com.chweb.library.dto.subscriber.SubscriberUpdateRequestDTO;
 import com.chweb.library.service.crud.subscriber.SubscriberDbService;
 import io.swagger.annotations.Api;
@@ -28,26 +28,26 @@ public class SubscriberController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get subscriber by id")
-    public ResponseEntity<ResponseSuccessDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(subscriberDbService.getById(id)));
+    public ResponseEntity<SubscriberResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(subscriberDbService.getById(id));
     }
 
     @GetMapping
     @ApiOperation(value = "Get all subscribers")
-    public ResponseEntity<PageableResponseDTO> getAll(@Valid PageableRequestDTO dto) {
-        return ResponseEntity.ok(new PageableResponseDTO(subscriberDbService.getAll(dto), dto.getSorting()));
+    public ResponseEntity<PageableResponseDTO<SubscriberResponseDTO>> getAll(@Valid PageableRequestDTO dto) {
+        return ResponseEntity.ok(subscriberDbService.getAll(dto));
     }
 
     @PostMapping
     @ApiOperation(value = "Create subscriber")
-    public ResponseEntity<ResponseSuccessDTO> create(@Valid @RequestBody SubscriberCreateRequestDTO dto) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(subscriberDbService.create(dto)));
+    public ResponseEntity<SubscriberResponseDTO> create(@Valid @RequestBody SubscriberCreateRequestDTO dto) {
+        return ResponseEntity.ok(subscriberDbService.create(dto));
     }
 
     @PutMapping
     @ApiOperation(value = "Update subscriber")
-    public ResponseEntity<ResponseSuccessDTO> update(@Valid @RequestBody SubscriberUpdateRequestDTO dto) {
-        return ResponseEntity.ok(new ResponseSuccessDTO(subscriberDbService.update(dto)));
+    public ResponseEntity<SubscriberResponseDTO> update(@Valid @RequestBody SubscriberUpdateRequestDTO dto) {
+        return ResponseEntity.ok(subscriberDbService.update(dto));
     }
 
     @DeleteMapping("/{id}")

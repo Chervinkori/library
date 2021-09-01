@@ -1,6 +1,7 @@
 package com.chweb.library.service.crud.subscriber;
 
 import com.chweb.library.dto.pageable.PageableRequestDTO;
+import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.dto.subscriber.SubscriberCreateRequestDTO;
 import com.chweb.library.dto.subscriber.SubscriberResponseDTO;
 import com.chweb.library.dto.subscriber.SubscriberUpdateRequestDTO;
@@ -23,17 +24,19 @@ public class SubscriberDbService implements SubscriberService {
 
     @Override
     public SubscriberResponseDTO getById(Long id) {
-        SubscriberEntity entity = subscriberRepository.findByIdAndActiveIsTrue(id).orElse(null);
-        if (entity == null) {
-            throw new EntityNotFoundException(SubscriberEntity.class, id);
-        }
+        SubscriberEntity entity = subscriberRepository.findByIdAndActiveIsTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException(SubscriberEntity.class, id));
 
         return toResponseDTO(entity);
     }
 
     @Override
-    public Page<SubscriberResponseDTO> getAll(PageableRequestDTO dto) {
-        return subscriberRepository.findAllByActiveIsTrue(PageableUtils.getPageRequest(dto)).map(this::toResponseDTO);
+    public PageableResponseDTO<SubscriberResponseDTO> getAll(PageableRequestDTO dto) {
+        Page<SubscriberResponseDTO> page = subscriberRepository
+                .findAllByActiveIsTrue(PageableUtils.getPageableFromDTO(dto))
+                .map(this::toResponseDTO);
+
+        return new PageableResponseDTO<>(page, dto.getSorting());
     }
 
     @Override
@@ -52,29 +55,18 @@ public class SubscriberDbService implements SubscriberService {
 
     @Override
     public SubscriberResponseDTO update(SubscriberUpdateRequestDTO dto) {
-        SubscriberEntity entity = subscriberRepository.findByIdAndActiveIsTrue(dto.getId()).orElse(null);
-        if (entity == null) {
-            throw new EntityNotFoundException(SubscriberEntity.class, dto.getId());
-        }
+        SubscriberEntity entity = subscriberRepository.findByIdAndActiveIsTrue(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException(SubscriberEntity.class, dto.getId()));
 
-        if (dto.getFirstName() != null) {
-            entity.setFirstName(dto.getFirstName());
-        }
-        if (dto.getLastName() != null) {
-            entity.setLastName(dto.getLastName());
-        }
+        entity.setFirstName(dto.getFirstName());
+        entity.setLastName(dto.getLastName());
+        entity.setBirthDate(dto.getBirthDate());
+        entity.setPassportData(dto.getPassportData());
+        entity.setPhoneNumber(dto.getPhoneNumber());
+        entity.setAddress(dto.getAddress());
 
-        if (dto.getBirthDate() != null) {
-            entity.setBirthDate(dto.getBirthDate());
-        }
-        if (dto.getPassportData() != null) {
-            entity.setPassportData(dto.getPassportData());
-        }
-        if (dto.getPhoneNumber() != null) {
-            entity.setPhoneNumber(dto.getPhoneNumber());
-        }
-        if (dto.getAddress() != null) {
-            entity.setAddress(dto.getAddress());
+        if (dto.getMiddleName() != null) {
+            entity.setMiddleName(dto.getMiddleName());
         }
 
         return toResponseDTO(subscriberRepository.save(entity));
@@ -82,10 +74,9 @@ public class SubscriberDbService implements SubscriberService {
 
     @Override
     public void delete(Long id) {
-        SubscriberEntity entity = subscriberRepository.findByIdAndActiveIsTrue(id).orElse(null);
-        if (entity == null) {
-            throw new EntityNotFoundException(SubscriberEntity.class, id);
-        }
+        SubscriberEntity entity = subscriberRepository.findByIdAndActiveIsTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException(SubscriberEntity.class, id));
+
         entity.setActive(false);
         subscriberRepository.save(entity);
     }
