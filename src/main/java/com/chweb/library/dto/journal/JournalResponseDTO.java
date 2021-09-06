@@ -1,9 +1,8 @@
 package com.chweb.library.dto.journal;
 
-import com.chweb.library.dto.book.BookResponseDTO;
+import com.chweb.library.dto.journalitem.JournalItemResponseDTO;
 import com.chweb.library.dto.librarian.LibrarianResponseDTO;
 import com.chweb.library.dto.subscriber.SubscriberResponseDTO;
-import com.chweb.library.model.BookStateResponseDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,24 +21,12 @@ import java.util.Collection;
 public class JournalResponseDTO {
     Long id;
 
+    @JsonProperty("issue_date")
+    LocalDate issueDate;
+
     LibrarianResponseDTO librarian;
 
     SubscriberResponseDTO subscriber;
 
-    @JsonProperty("issue_date")
-    LocalDate issueDate;
-
-    Collection<BookDTO> items;
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class BookDTO {
-        BookResponseDTO book;
-
-        @JsonProperty("return_date")
-        LocalDate returnDate;
-
-        BookStateResponseDTO state;
-    }
+    Collection<JournalItemResponseDTO> items;
 }

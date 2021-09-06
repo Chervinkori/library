@@ -1,4 +1,4 @@
-package com.chweb.library.dto.journal;
+package com.chweb.library.dto.journalitem;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,35 +7,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
-import java.time.LocalDate;
 
 /**
  * @author chervinko <br>
- * 30.08.2021
+ * 04.09.2021
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JournalUpdateRequestDTO {
+public class JournalItemCreateRequestDTO {
     @NotNull
     @Positive
-    Long id;
-
-    @NotNull
-    @PastOrPresent
-    @JsonProperty("issue_date")
-    LocalDate issueDate;
+    @JsonProperty("journal_id")
+    Long journalId;
 
     @NotNull
     @Positive
-    @JsonProperty("librarian_id")
-    Long librarianId;
-
-    @NotNull
-    @Positive
-    @JsonProperty("subscriber_id")
-    Long subscriberId;
+    @JsonProperty("book_id")
+    Long bookId;
 }

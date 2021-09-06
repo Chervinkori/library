@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
-import java.util.Collection;
 
 /**
  * @author chervinko <br>
@@ -21,5 +20,5 @@ public class PageableRequestDTO {
     Integer page = 0;
     @Min(1)
     Integer size = 20;
-    Collection<SortingDTO> sorting;
+    SortingDTO[] sorting;
 }

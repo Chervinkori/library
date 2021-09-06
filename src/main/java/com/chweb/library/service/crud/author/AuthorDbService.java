@@ -12,6 +12,7 @@ import com.chweb.library.util.PageableUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author chervinko <br>
@@ -39,6 +40,7 @@ public class AuthorDbService implements AuthorService {
     }
 
     @Override
+    @Transactional
     public AuthorResponseDTO create(AuthorCreateRequestDTO dto) {
         AuthorEntity entity = new AuthorEntity();
         entity.setFirstName(dto.getFirstName());
@@ -52,6 +54,7 @@ public class AuthorDbService implements AuthorService {
     }
 
     @Override
+    @Transactional
     public AuthorResponseDTO update(AuthorUpdateRequestDTO dto) {
         AuthorEntity entity = authorRepository.findByIdAndActiveIsTrue(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(AuthorEntity.class, dto.getId()));
@@ -92,8 +95,6 @@ public class AuthorDbService implements AuthorService {
         dto.setBirthDate(entity.getBirthDate());
         dto.setDeathDate(entity.getDeathDate());
         dto.setDescription(entity.getDescription());
-        dto.setUpdateDate(entity.getUpdateDate());
-        dto.setCreateDate(entity.getCreateDate());
 
         return dto;
     }

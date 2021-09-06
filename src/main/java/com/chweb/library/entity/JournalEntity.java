@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Book issuing journal.
@@ -43,5 +44,5 @@ public class JournalEntity extends BaseEntity {
     private SubscriberEntity subscriber;
 
     @OneToMany(mappedBy = "journal")
-    private Collection<JournalBookEntity> journalBookRelations;
+    private Collection<JournalItemEntity> journalItems = new HashSet<>();
 }

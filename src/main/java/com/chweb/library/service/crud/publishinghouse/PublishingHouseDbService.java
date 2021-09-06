@@ -8,6 +8,7 @@ import com.chweb.library.repository.PublishingHouseRepository;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -43,6 +44,7 @@ public class PublishingHouseDbService implements PublishingHouseService {
     }
 
     @Override
+    @Transactional
     public PublishingHouseResponseDTO create(PublishingHouseCreateRequestDTO dto) {
         PublishingHouseEntity entity = new PublishingHouseEntity();
         entity.setName(dto.getName());
@@ -53,6 +55,7 @@ public class PublishingHouseDbService implements PublishingHouseService {
     }
 
     @Override
+    @Transactional
     public PublishingHouseResponseDTO update(PublishingHouseUpdateRequestDTO dto) {
         final PublishingHouseEntity entity = publishingHouseRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(PublishingHouseEntity.class, dto.getId()));

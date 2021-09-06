@@ -57,6 +57,7 @@ CREATE TABLE book
     "name"              varchar NOT NULL,
     publish_year        int     NOT NULL,
     amount              int     NOT NULL DEFAULT 0,
+    in_stock            bool    NOT NULL DEFAULT true,
     description         varchar NULL,
     create_date         timestamp NULL,
     update_date         timestamp NULL,
@@ -168,20 +169,20 @@ COMMENT
 ON TABLE book_state IS 'Справочник состояний книги';
 
 -- Связь "Журнал выдачи - Книга"
-CREATE TABLE journal_book
+CREATE TABLE journal_item
 (
     journal_id    int8 NOT NULL,
     book_id       int8 NOT NULL,
-    return_date   date NOT NULL,
-    book_state_id int8 NOT NULL,
+    return_date   date,
+    book_state_id int8,
     create_date   timestamp NULL,
     update_date   timestamp NULL,
     active        bool NOT NULL DEFAULT true,
-    CONSTRAINT journal_book_pk PRIMARY KEY (journal_id, book_id),
-    CONSTRAINT journal_book_jornal_fk FOREIGN KEY (journal_id) REFERENCES journal (id),
-    CONSTRAINT journal_book_book_fk FOREIGN KEY (book_id) REFERENCES book (id),
-    CONSTRAINT journal_book_book_state_fk FOREIGN KEY (book_state_id) REFERENCES book_state (id)
+    CONSTRAINT journal_item_pk PRIMARY KEY (journal_id, book_id),
+    CONSTRAINT journal_item_jornal_fk FOREIGN KEY (journal_id) REFERENCES journal (id),
+    CONSTRAINT journal_item_book_fk FOREIGN KEY (book_id) REFERENCES book (id),
+    CONSTRAINT journal_item_book_state_fk FOREIGN KEY (book_state_id) REFERENCES book_state (id)
 );
-CREATE INDEX journal_book_active_idx ON journal_book (active);
+CREATE INDEX journal_item_active_idx ON journal_item (active);
 COMMENT
-ON TABLE journal_book IS 'Связь "Журнал выдачи - Книга"';
+ON TABLE journal_item IS 'Связь "Журнал выдачи - Книга"';

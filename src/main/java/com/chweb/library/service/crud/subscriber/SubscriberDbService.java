@@ -12,6 +12,7 @@ import com.chweb.library.util.PageableUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author chervinko <br>
@@ -40,6 +41,7 @@ public class SubscriberDbService implements SubscriberService {
     }
 
     @Override
+    @Transactional
     public SubscriberResponseDTO create(SubscriberCreateRequestDTO dto) {
         SubscriberEntity entity = new SubscriberEntity();
         entity.setFirstName(dto.getFirstName());
@@ -54,6 +56,7 @@ public class SubscriberDbService implements SubscriberService {
     }
 
     @Override
+    @Transactional
     public SubscriberResponseDTO update(SubscriberUpdateRequestDTO dto) {
         SubscriberEntity entity = subscriberRepository.findByIdAndActiveIsTrue(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(SubscriberEntity.class, dto.getId()));

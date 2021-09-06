@@ -8,6 +8,7 @@ import com.chweb.library.repository.BookStateRepository;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -43,6 +44,7 @@ public class BookStateDbService implements BookStateService {
     }
 
     @Override
+    @Transactional
     public BookStateResponseDTO create(BookStateCreateRequestDTO dto) {
         BookStateEntity entity = new BookStateEntity();
         entity.setName(dto.getName());
@@ -53,6 +55,7 @@ public class BookStateDbService implements BookStateService {
     }
 
     @Override
+    @Transactional
     public BookStateResponseDTO update(BookStateUpdateRequestDTO dto) {
         final BookStateEntity entity = bookStateRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(BookStateEntity.class, dto.getId()));

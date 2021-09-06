@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author chervinko <br>
@@ -34,6 +33,9 @@ public class BookEntity extends BaseEntity {
     @Column(name = "amount", nullable = false)
     private Integer amount;
 
+    @Column(name = "in_stock", nullable = false)
+    private Boolean inStock = true;
+
     @Column(name = "description")
     private String description;
 
@@ -42,7 +44,7 @@ public class BookEntity extends BaseEntity {
     private LocalDateTime updateDate;
 
     @OneToMany(mappedBy = "book")
-    private Collection<JournalBookEntity> journalBookRelations;
+    private Collection<JournalItemEntity> journalItems;
 
     @ManyToOne
     @JoinColumn(name = "publishing_house_id")
@@ -62,5 +64,5 @@ public class BookEntity extends BaseEntity {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    private List<AuthorEntity> authors;
+    private Collection<AuthorEntity> authors;
 }

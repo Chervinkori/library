@@ -33,7 +33,7 @@ public class BookUpdateRequestDTO {
     Integer publishYear;
 
     @NotNull
-    @Positive
+    @PositiveOrZero
     Integer amount;
 
     @Size(min = 2)

@@ -7,19 +7,25 @@ import com.chweb.library.repository.ThemeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class ThemeControllerTest {
-    private static final String URL_TEMPLATE = "/theme";
+    private static final String URL_PREFIX = "/theme";
 
     private final ThemeEntity entity = new ThemeEntity();
     private final ThemeCreateRequestDTO createRequestDTO = new ThemeCreateRequestDTO();
@@ -47,6 +53,22 @@ public class ThemeControllerTest {
 
     @Autowired
     private ThemeRepository themeRepository;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Rule
+    public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/generated-snippets");
+
+    @Before
+    public void setUp() {
+        mvc = MockMvcBuilders.webAppContextSetup(this.context)
+                .apply(documentationConfiguration(this.restDocumentation))
+                .alwaysDo(document("{class-name}/{method-name}",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
+                .build();
+    }
 
     @Before
     public void initData() {
@@ -64,7 +86,7 @@ public class ThemeControllerTest {
 
     @Test
     public void create() throws Exception {
-        mvc.perform(post(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post(URL_PREFIX).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(createRequestDTO.getName())));
@@ -72,7 +94,9 @@ public class ThemeControllerTest {
 
     @Test
     public void deleteById() throws Exception {
-        mvc.perform(delete(URL_TEMPLATE + "/{id}", entity.getId()))
+        assertTrue(themeRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());
+
+        mvc.perform(delete(URL_PREFIX + "/{id}", entity.getId()))
                 .andExpect(status().isOk());
 
         assertFalse(themeRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());
@@ -80,28 +104,28 @@ public class ThemeControllerTest {
 
     @Test
     public void getById() throws Exception {
-        mvc.perform(get(URL_TEMPLATE + "/{id}", entity.getId()))
+        mvc.perform(get(URL_PREFIX + "/{id}", entity.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(entity.getName())));
     }
 
     @Test
     public void getByName() throws Exception {
-        mvc.perform(get(URL_TEMPLATE + "/name/{name}", entity.getName()))
+        mvc.perform(get(URL_PREFIX + "/name/{name}", entity.getName()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(entity.getId().intValue())));
     }
 
     @Test
     public void getAll() throws Exception {
-        mvc.perform(get(URL_TEMPLATE))
+        mvc.perform(get(URL_PREFIX))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[*].name").value(Matchers.contains(entity.getName())));
     }
 
     @Test
     public void update() throws Exception {
-        mvc.perform(put(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put(URL_PREFIX).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequestDTO)))
                 .andExpect(status().isOk());
 

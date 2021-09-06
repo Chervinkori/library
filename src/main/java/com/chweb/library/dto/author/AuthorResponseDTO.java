@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * @author chervinko <br>
@@ -34,10 +33,4 @@ public class AuthorResponseDTO {
     LocalDate deathDate;
 
     String description;
-
-    @JsonProperty("update_date")
-    LocalDateTime updateDate;
-
-    @JsonProperty("create_date")
-    LocalDateTime createDate;
 }

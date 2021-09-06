@@ -3,6 +3,7 @@ package com.chweb.library.dto.response;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -12,9 +13,9 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 public class ResponseErrorDTO {
-    protected TypicalError status;
-    protected String message;
-    protected Collection<String> errors;
+    private TypicalError status;
+    private String message;
+    private Collection<String> errors = new ArrayList<>();
 
     public ResponseErrorDTO(TypicalError typicalError) {
         this.status = typicalError;

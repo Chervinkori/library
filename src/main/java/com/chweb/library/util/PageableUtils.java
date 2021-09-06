@@ -7,15 +7,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.Collection;
-
 /**
  * @author chervinko <br>
  * 29.08.2021
  */
 public class PageableUtils {
-    public static Sort getSortFromDTO(Collection<SortingDTO> sorting) {
-        if (sorting == null || sorting.isEmpty()) {
+    public static Sort getSortFromDTO(SortingDTO[] sorting) {
+        if (sorting == null || sorting.length == 0) {
             return Sort.unsorted();
         }
 

@@ -8,21 +8,27 @@ import com.chweb.library.repository.LibrarianRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class LibrarianControllerTest {
-    private static final String URL_TEMPLATE = "/librarian";
+    private static final String URL_PREFIX = "/librarian";
 
     private final LibrarianEntity entity = new LibrarianEntity();
     private final LibrarianCreateRequestDTO createRequestDTO = new LibrarianCreateRequestDTO();
@@ -50,6 +56,22 @@ public class LibrarianControllerTest {
 
     @Autowired
     private LibrarianRepository librarianRepository;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Rule
+    public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/generated-snippets");
+
+    @Before
+    public void setUp() {
+        mvc = MockMvcBuilders.webAppContextSetup(this.context)
+                .apply(documentationConfiguration(this.restDocumentation))
+                .alwaysDo(document("{class-name}/{method-name}",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
+                .build();
+    }
 
     @Before
     public void initData() {
@@ -79,14 +101,14 @@ public class LibrarianControllerTest {
 
     @Test
     public void getById() throws Exception {
-        mvc.perform(get(URL_TEMPLATE + "/{id}", entity.getId()))
+        mvc.perform(get(URL_PREFIX + "/{id}", entity.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.first_name", is(entity.getFirstName())));
     }
 
     @Test
     public void getAll() throws Exception {
-        mvc.perform(get(URL_TEMPLATE))
+        mvc.perform(get(URL_PREFIX))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[*].first_name").value(Matchers.contains(entity.getFirstName())));
     }
@@ -107,7 +129,7 @@ public class LibrarianControllerTest {
         int totalElements = librarianRepository.findAllByActiveIsTrue().size();
 
         // Выводить по одному элементу на страницу
-        mvc.perform(get(URL_TEMPLATE).param("size", "1"))
+        mvc.perform(get(URL_PREFIX).param("size", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.pageable").exists())
                 .andExpect(jsonPath("$.meta.pageable.total_elements", is(totalElements)))
@@ -120,15 +142,15 @@ public class LibrarianControllerTest {
         createRequestDTO.setFirstName("f");
         TypicalError typicalError = TypicalError.VALIDATION_ERROR;
 
-        mvc.perform(post(URL_TEMPLATE).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post(URL_PREFIX).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().is(typicalError.getHttpStatus().value()))
-                .andExpect(jsonPath("$.typical_error", is(typicalError.toString())));
+                .andExpect(jsonPath("$.status", is(typicalError.toString())));
     }
 
     @Test
     public void create() throws Exception {
-        mvc.perform(post(URL_TEMPLATE)
+        mvc.perform(post(URL_PREFIX)
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.first_name", is(createRequestDTO.getFirstName())));
@@ -136,7 +158,7 @@ public class LibrarianControllerTest {
 
     @Test
     public void update() throws Exception {
-        mvc.perform(put(URL_TEMPLATE)
+        mvc.perform(put(URL_PREFIX)
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateRequestDTO)))
                 .andExpect(status().isOk());
 
@@ -146,7 +168,9 @@ public class LibrarianControllerTest {
 
     @Test
     public void deleteById() throws Exception {
-        mvc.perform(delete(URL_TEMPLATE + "/{id}", entity.getId()))
+        assertTrue(librarianRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());
+
+        mvc.perform(delete(URL_PREFIX + "/{id}", entity.getId()))
                 .andExpect(status().isOk());
 
         assertFalse(librarianRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());

@@ -28,14 +28,16 @@ public class BookController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get book by id")
-    public ResponseEntity<BookResponseDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(bookDbService.getById(id));
+    public ResponseEntity<BookResponseDTO> getById(@PathVariable Long id,
+                                                   @RequestParam(name = "in-stock", required = false) Boolean inStock) {
+        return ResponseEntity.ok(bookDbService.getById(id, inStock));
     }
 
     @GetMapping
     @ApiOperation(value = "Get all books")
-    public ResponseEntity<PageableResponseDTO<BookResponseDTO>> getAll(@Valid PageableRequestDTO dto) {
-        return ResponseEntity.ok(bookDbService.getAll(dto));
+    public ResponseEntity<PageableResponseDTO<BookResponseDTO>> getAll(@Valid PageableRequestDTO dto,
+                                                                       @RequestParam(name = "in-stock", required = false) Boolean inStock) {
+        return ResponseEntity.ok(bookDbService.getAll(dto, inStock));
     }
 
     @PostMapping

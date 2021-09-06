@@ -13,7 +13,11 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<BookEntity, Long> {
     Optional<BookEntity> findByIdAndActiveIsTrue(Long id);
 
+    Optional<BookEntity> findByIdAndInStockAndActiveIsTrue(Long id, Boolean inStock);
+
     Page<BookEntity> findAllByActiveIsTrue(Pageable pageable);
+
+    Page<BookEntity> findAllByInStockAndActiveIsTrue(Pageable pageable, Boolean inStock);
 
     Collection<BookEntity> findAllByActiveIsTrue();
 }

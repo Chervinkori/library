@@ -8,6 +8,7 @@ import com.chweb.library.repository.ThemeRepository;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -43,6 +44,7 @@ public class ThemeDbService implements ThemeService {
     }
 
     @Override
+    @Transactional
     public ThemeResponseDTO create(ThemeCreateRequestDTO dto) {
         ThemeEntity entity = new ThemeEntity();
         entity.setName(dto.getName());
@@ -53,6 +55,7 @@ public class ThemeDbService implements ThemeService {
     }
 
     @Override
+    @Transactional
     public ThemeResponseDTO update(ThemeUpdateRequestDTO dto) {
         final ThemeEntity entity = themeRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(ThemeEntity.class, dto.getId()));

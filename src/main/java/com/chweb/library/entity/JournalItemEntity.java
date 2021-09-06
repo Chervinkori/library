@@ -1,6 +1,8 @@
 package com.chweb.library.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
+ * The journal element is a book.
  * The link between the book and the issue journal.
  * The entity is needed to store additional parameters.
  *
@@ -18,11 +21,12 @@ import java.time.LocalDateTime;
  */
 @Setter
 @Getter
-@Entity(name = "JournalBook")
-@Table(name = "journal_book")
-public class JournalBookEntity extends BaseEntity {
+@Entity(name = "JournalItem")
+@Table(name = "journal_item")
+@NoArgsConstructor
+public class JournalItemEntity extends BaseEntity {
     @EmbeddedId
-    private JournalBookId id = new JournalBookId();
+    private JournalItemId id = new JournalItemId();
 
     @ManyToOne
     @MapsId("journalId")
@@ -43,10 +47,17 @@ public class JournalBookEntity extends BaseEntity {
     @JoinColumn(name = "book_state_id")
     private BookStateEntity state;
 
+    public JournalItemEntity(JournalEntity journal, BookEntity book) {
+        this.journal = journal;
+        this.book = book;
+    }
+
     @Setter
     @Getter
     @Embeddable
-    public static class JournalBookId implements Serializable {
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class JournalItemId implements Serializable {
         private Long journalId;
         private Long bookId;
     }

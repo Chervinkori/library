@@ -13,6 +13,7 @@ import com.chweb.library.util.PageableUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author chervinko <br>
@@ -40,6 +41,7 @@ public class LibrarianDbService implements LibrarianService {
     }
 
     @Override
+    @Transactional
     public LibrarianResponseDTO create(LibrarianCreateRequestDTO dto) {
         LibrarianEntity entity = new LibrarianEntity();
         entity.setFirstName(dto.getFirstName());
@@ -54,6 +56,7 @@ public class LibrarianDbService implements LibrarianService {
     }
 
     @Override
+    @Transactional
     public LibrarianResponseDTO update(LibrarianUpdateRequestDTO dto) {
         LibrarianEntity entity = librarianRepository.findByIdAndActiveIsTrue(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(AuthorEntity.class, dto.getId()));

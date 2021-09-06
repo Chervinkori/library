@@ -12,9 +12,9 @@ import com.chweb.library.entity.BookEntity;
  * 30.08.2021
  */
 public interface BookService {
-    BookResponseDTO getById(Long id);
+    BookResponseDTO getById(Long id, Boolean inStock);
 
-    PageableResponseDTO<BookResponseDTO> getAll(PageableRequestDTO dto);
+    PageableResponseDTO<BookResponseDTO> getAll(PageableRequestDTO dto, Boolean inStock);
 
     BookResponseDTO create(BookCreateRequestDTO dto);
 

@@ -27,6 +27,9 @@ public class BookResponseDTO {
 
     Integer amount;
 
+    @JsonProperty("in_stock")
+    Boolean inStock;
+
     String description;
 
     @JsonProperty("publishing_house")
