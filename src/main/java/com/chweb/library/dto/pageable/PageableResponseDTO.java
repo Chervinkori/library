@@ -20,9 +20,11 @@ public class PageableResponseDTO<T> {
 
     public PageableResponseDTO(Page<T> page, SortingDTO[] sorting) {
         this.data = page.getContent();
-        this.meta = new MetaDTO(new PageableDTO(page.getTotalPages(),
+        this.meta = new MetaDTO(new PageableDTO(
+                page.getTotalPages(),
                 page.getTotalElements(),
                 page.getNumber(),
-                page.getSize()), sorting);
+                page.getSize()
+        ), sorting);
     }
 }

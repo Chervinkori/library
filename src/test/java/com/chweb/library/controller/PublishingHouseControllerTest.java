@@ -65,9 +65,11 @@ public class PublishingHouseControllerTest {
     public void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(this.context)
                 .apply(documentationConfiguration(this.restDocumentation))
-                .alwaysDo(document("{class-name}/{method-name}",
+                .alwaysDo(document(
+                        "{class-name}/{method-name}",
                         preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())))
+                        preprocessResponse(prettyPrint())
+                ))
                 .build();
     }
 

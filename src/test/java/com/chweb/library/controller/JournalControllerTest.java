@@ -216,7 +216,7 @@ public class JournalControllerTest {
 
     @Test
     public void getByLibrarianId() throws Exception {
-        mvc.perform(get(URL_PREFIX+ "/librarian/{id}", entity.getLibrarian().getId()))
+        mvc.perform(get(URL_PREFIX + "/librarian/{id}", entity.getLibrarian().getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[*].issue_date").value(Matchers.contains(entity.getIssueDate().toString())))
                 .andExpect(jsonPath("$.data[*].items", hasSize(greaterThan(0))));
@@ -224,7 +224,7 @@ public class JournalControllerTest {
 
     @Test
     public void getBySubscriberId() throws Exception {
-        mvc.perform(get(URL_PREFIX+ "/subscriber/{id}", entity.getSubscriber().getId()))
+        mvc.perform(get(URL_PREFIX + "/subscriber/{id}", entity.getSubscriber().getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[*].issue_date").value(Matchers.contains(entity.getIssueDate().toString())))
                 .andExpect(jsonPath("$.data[*].items", hasSize(greaterThan(0))));

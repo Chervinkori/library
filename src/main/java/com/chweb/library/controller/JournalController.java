@@ -60,7 +60,7 @@ public class JournalController {
     @GetMapping("/librarian/{id}")
     @ApiOperation(value = "Get all journals by librarian id")
     public ResponseEntity<PageableResponseDTO<JournalResponseDTO>> getByLibrarianId(@Valid PageableRequestDTO dto,
-                                                                                     @PathVariable Long id) {
+                                                                                    @PathVariable Long id) {
         return ResponseEntity.ok(journalDbService.getByLibrarianId(dto, id));
     }
 

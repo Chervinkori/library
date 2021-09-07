@@ -60,7 +60,7 @@ public class JournalItemController {
     @GetMapping("/book/{id}")
     @ApiOperation(value = "Get journal items by book id")
     public ResponseEntity<PageableResponseDTO<JournalItemResponseDTO>> getAllByBookId(@Valid PageableRequestDTO dto,
-                                                                              @PathVariable Long id) {
+                                                                                      @PathVariable Long id) {
         return ResponseEntity.ok(journalItemDbService.getAllByBookId(dto, id));
     }
 }
