@@ -56,4 +56,18 @@ public class JournalController {
         journalDbService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/librarian/{id}")
+    @ApiOperation(value = "Get all journals by librarian id")
+    public ResponseEntity<PageableResponseDTO<JournalResponseDTO>> getByLibrarianId(@Valid PageableRequestDTO dto,
+                                                                                     @PathVariable Long id) {
+        return ResponseEntity.ok(journalDbService.getByLibrarianId(dto, id));
+    }
+
+    @GetMapping("/subscriber/{id}")
+    @ApiOperation(value = "Get all journals by subscriber id")
+    public ResponseEntity<PageableResponseDTO<JournalResponseDTO>> getBySubscriberId(@Valid PageableRequestDTO dto,
+                                                                                     @PathVariable Long id) {
+        return ResponseEntity.ok(journalDbService.getBySubscriberId(dto, id));
+    }
 }

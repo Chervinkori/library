@@ -1,5 +1,6 @@
 package com.chweb.library.controller;
 
+import com.chweb.library.dto.response.TypicalError;
 import com.chweb.library.entity.ThemeEntity;
 import com.chweb.library.model.ThemeCreateRequestDTO;
 import com.chweb.library.model.ThemeUpdateRequestDTO;
@@ -100,6 +101,16 @@ public class ThemeControllerTest {
                 .andExpect(status().isOk());
 
         assertFalse(themeRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());
+    }
+
+    @Test
+    public void notFoundError() throws Exception {
+        TypicalError typicalError = TypicalError.ENTITY_NOT_FOUND;
+
+        String urlTemplate = URL_PREFIX + "/{id}";
+        mvc.perform(get(urlTemplate, -1))
+                .andExpect(status().is(typicalError.getHttpStatus().value()))
+                .andExpect(jsonPath("$.status", is(typicalError.toString())));
     }
 
     @Test

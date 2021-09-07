@@ -7,6 +7,7 @@ import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import com.chweb.library.service.crud.exception.NotUniqException;
 import com.chweb.library.service.crud.exception.UpdateBookAmountException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -66,6 +67,13 @@ public class ResponseExceptionHandler {
     public ResponseEntity<ResponseErrorDTO> handleNotUniqException(NotUniqException exp) {
         log.info(exp.getMessage());
         ResponseErrorDTO errorDTO = new ResponseErrorDTO(TypicalError.NOT_UNIQ, exp.getMessage());
+        return new ResponseEntity<>(errorDTO, errorDTO.getStatus().getHttpStatus());
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<ResponseErrorDTO> handleNotUniqException(PropertyReferenceException exp) {
+        log.info(exp.getMessage());
+        ResponseErrorDTO errorDTO = new ResponseErrorDTO(TypicalError.PROPERTY_REFERENCE_ERROR, exp.getMessage());
         return new ResponseEntity<>(errorDTO, errorDTO.getStatus().getHttpStatus());
     }
 }

@@ -22,5 +22,7 @@ public interface JournalItemService {
 
     void delete(Long journalId, Long bookId);
 
+    PageableResponseDTO<JournalItemResponseDTO> getAllByBookId(PageableRequestDTO dto, Long id);
+
     JournalItemResponseDTO toResponseDTO(JournalItemEntity entity);
 }

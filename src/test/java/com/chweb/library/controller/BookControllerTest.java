@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -114,6 +115,16 @@ public class BookControllerTest {
 
         initCreateRequestDTO();
         initUpdateRequestDTO();
+    }
+
+    @Test
+    public void notFoundError() throws Exception {
+        TypicalError typicalError = TypicalError.ENTITY_NOT_FOUND;
+
+        String urlTemplate = URL_PREFIX + "/{id}";
+        mvc.perform(get(urlTemplate, -1))
+                .andExpect(status().is(typicalError.getHttpStatus().value()))
+                .andExpect(jsonPath("$.status", is(typicalError.toString())));
     }
 
     @Test
@@ -299,6 +310,27 @@ public class BookControllerTest {
                 .andExpect(status().isOk());
 
         assertFalse(bookRepository.findByIdAndActiveIsTrue(this.entity.getId()).isPresent());
+    }
+
+    @Test
+    public void getByPublishingHouseId() throws Exception {
+        mvc.perform(get(URL_PREFIX + "/publishing-house/{id}", entity.getPublishingHouse().getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[*].name").value(Matchers.contains(entity.getName())));
+    }
+
+    @Test
+    public void getByThemeId() throws Exception {
+        mvc.perform(get(URL_PREFIX + "/theme/{id}", new ArrayList<>(entity.getThemes()).get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[*].name").value(Matchers.contains(entity.getName())));
+    }
+
+    @Test
+    public void getByAuthorId() throws Exception {
+        mvc.perform(get(URL_PREFIX + "/author/{id}", new ArrayList<>(entity.getAuthors()).get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[*].name").value(Matchers.contains(entity.getName())));
     }
 
     private void initPublishingHouseEntity() {

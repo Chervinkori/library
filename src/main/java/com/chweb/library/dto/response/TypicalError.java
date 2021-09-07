@@ -15,7 +15,8 @@ public enum TypicalError {
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "Not found"),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation error"),
     ISSUED_BOOKS_ERROR(HttpStatus.BAD_REQUEST, "Issued books error"),
-    NOT_UNIQ(HttpStatus.BAD_REQUEST, "Is not unique");
+    NOT_UNIQ(HttpStatus.BAD_REQUEST, "Is not unique"),
+    PROPERTY_REFERENCE_ERROR(HttpStatus.BAD_REQUEST, "Property reference error");
 
     private final HttpStatus httpStatus;
     private final String title;

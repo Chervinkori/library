@@ -100,6 +100,16 @@ public class LibrarianControllerTest {
     }
 
     @Test
+    public void notFoundError() throws Exception {
+        TypicalError typicalError = TypicalError.ENTITY_NOT_FOUND;
+
+        String urlTemplate = URL_PREFIX + "/{id}";
+        mvc.perform(get(urlTemplate, -1))
+                .andExpect(status().is(typicalError.getHttpStatus().value()))
+                .andExpect(jsonPath("$.status", is(typicalError.toString())));
+    }
+
+    @Test
     public void getById() throws Exception {
         mvc.perform(get(URL_PREFIX + "/{id}", entity.getId()))
                 .andExpect(status().isOk())

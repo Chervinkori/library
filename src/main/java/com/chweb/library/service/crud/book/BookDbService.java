@@ -161,6 +161,34 @@ public class BookDbService implements BookService {
     }
 
     @Override
+    public PageableResponseDTO<BookResponseDTO> getByPublishingHouseId(PageableRequestDTO dto, Long id) {
+        return new PageableResponseDTO<>(bookRepository.findAllByPublishingHouseIdAndActiveIsTrue(PageableUtils.getPageableFromDTO(
+                dto), id).map(this::toResponseDTO), dto.getSorting());
+    }
+
+    @Override
+    public PageableResponseDTO<BookResponseDTO> getByThemeId(PageableRequestDTO dto, Long id) {
+        return new PageableResponseDTO<>(bookRepository.findAllByThemeIdAndActiveIsTrue(PageableUtils.getPageableFromDTO(
+                dto), id).map(this::toResponseDTO), dto.getSorting());
+    }
+
+    @Override
+    public PageableResponseDTO<BookResponseDTO> getByAuthorId(PageableRequestDTO dto, Long id) {
+        return new PageableResponseDTO<>(bookRepository.findAllByAuthorIdAndActiveIsTrue(PageableUtils.getPageableFromDTO(
+                dto), id).map(this::toResponseDTO), dto.getSorting());
+    }
+
+    @Override
+    public void checkAndSetIssuedBook(BookEntity bookEntity) {
+        // Список активных выданных книг (без даты возврата)
+        Collection<JournalItemEntity> issuedItemCollection = journalItemRepository.findAllByBookIdAndReturnDateIsNullAndActiveIsTrue(
+                bookEntity.getId());
+
+        bookEntity.setInStock(issuedItemCollection.size() < bookEntity.getAmount());
+        bookRepository.save(bookEntity);
+    }
+
+    @Override
     public BookResponseDTO toResponseDTO(BookEntity entity) {
         BookResponseDTO dto = new BookResponseDTO();
         dto.setId(entity.getId());

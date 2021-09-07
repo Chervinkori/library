@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * The topic of the book.
@@ -39,5 +40,5 @@ public class ThemeEntity extends BaseEntity {
     private LocalDateTime updateDate;
 
     @ManyToMany(mappedBy = "themes")
-    private Collection<BookEntity> books;
+    private Collection<BookEntity> books = new HashSet<>();
 }

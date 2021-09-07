@@ -22,5 +22,16 @@ public interface BookService {
 
     void delete(Long id);
 
+    PageableResponseDTO<BookResponseDTO> getByAuthorId(PageableRequestDTO dto, Long id);
+
+    PageableResponseDTO<BookResponseDTO> getByThemeId(PageableRequestDTO dto, Long id);
+
+    PageableResponseDTO<BookResponseDTO> getByPublishingHouseId(PageableRequestDTO dto, Long id);
+
+    /**
+     * Проверяет наличие и выставляет книге соответствующий статус доступности.
+     */
+    void checkAndSetIssuedBook(BookEntity bookEntity);
+
     BookResponseDTO toResponseDTO(BookEntity entity);
 }

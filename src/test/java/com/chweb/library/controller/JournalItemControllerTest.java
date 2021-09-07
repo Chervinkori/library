@@ -2,6 +2,7 @@ package com.chweb.library.controller;
 
 import com.chweb.library.dto.journalitem.JournalItemCreateRequestDTO;
 import com.chweb.library.dto.journalitem.JournalItemUpdateRequestDTO;
+import com.chweb.library.dto.response.TypicalError;
 import com.chweb.library.entity.*;
 import com.chweb.library.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -121,6 +122,16 @@ public class JournalItemControllerTest {
     }
 
     @Test
+    public void notFoundError() throws Exception {
+        TypicalError typicalError = TypicalError.ENTITY_NOT_FOUND;
+
+        String urlTemplate = URL_PREFIX + "/{journalId}/{bookId}";
+        mvc.perform(get(urlTemplate, -1, -1))
+                .andExpect(status().is(typicalError.getHttpStatus().value()))
+                .andExpect(jsonPath("$.status", is(typicalError.toString())));
+    }
+
+    @Test
     public void getById() throws Exception {
         String urlTemplate = URL_PREFIX + "/{journalId}/{bookId}";
         mvc.perform(get(urlTemplate, entity.getId().getJournalId(), entity.getId().getBookId()))
@@ -130,7 +141,7 @@ public class JournalItemControllerTest {
 
     @Test
     public void getAll() throws Exception {
-        mvc.perform(get(URL_PREFIX).queryParam("in_stock", "true"))
+        mvc.perform(get(URL_PREFIX))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[*].book_id").value(Matchers.contains(entity.getBook().getId().intValue())));
     }
@@ -186,6 +197,13 @@ public class JournalItemControllerTest {
 
         assertFalse(journalItemRepository.findByIdAndActiveIsTrue(entity.getId()).isPresent());
         assertTrue(bookRepository.getById(bookEntity.getId()).getInStock());
+    }
+
+    @Test
+    public void getAllByBookId() throws Exception {
+        mvc.perform(get(URL_PREFIX + "/book/{id}", entity.getBook().getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[*].book_id").value(Matchers.contains(entity.getBook().getId().intValue())));
     }
 
     private void initLibrarianEntity() {

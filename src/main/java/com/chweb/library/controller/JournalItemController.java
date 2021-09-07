@@ -27,33 +27,40 @@ public class JournalItemController {
     private final JournalItemDbService journalItemDbService;
 
     @GetMapping("/{journalId}/{bookId}")
-    @ApiOperation(value = "Get journal by id")
+    @ApiOperation(value = "Get journal item by id")
     public ResponseEntity<JournalItemResponseDTO> getById(@PathVariable Long journalId, @PathVariable Long bookId) {
         return ResponseEntity.ok(journalItemDbService.getById(journalId, bookId));
     }
 
     @GetMapping
-    @ApiOperation(value = "Get all journals")
+    @ApiOperation(value = "Get all journal items")
     public ResponseEntity<PageableResponseDTO<JournalItemResponseDTO>> getAll(@Valid PageableRequestDTO dto) {
         return ResponseEntity.ok(journalItemDbService.getAll(dto));
     }
 
     @PostMapping
-    @ApiOperation(value = "Create journal")
+    @ApiOperation(value = "Create journal item")
     public ResponseEntity<JournalItemResponseDTO> create(@Valid @RequestBody JournalItemCreateRequestDTO dto) {
         return ResponseEntity.ok(journalItemDbService.create(dto));
     }
 
     @PutMapping
-    @ApiOperation(value = "Update journal")
+    @ApiOperation(value = "Update journal item")
     public ResponseEntity<JournalItemResponseDTO> update(@Valid @RequestBody JournalItemUpdateRequestDTO dto) {
         return ResponseEntity.ok(journalItemDbService.update(dto));
     }
 
     @DeleteMapping("/{journalId}/{bookId}")
-    @ApiOperation(value = "Delete journal by id")
+    @ApiOperation(value = "Delete journal item by id")
     public ResponseEntity<Void> delete(@PathVariable Long journalId, @PathVariable Long bookId) {
         journalItemDbService.delete(journalId, bookId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/book/{id}")
+    @ApiOperation(value = "Get journal items by book id")
+    public ResponseEntity<PageableResponseDTO<JournalItemResponseDTO>> getAllByBookId(@Valid PageableRequestDTO dto,
+                                                                              @PathVariable Long id) {
+        return ResponseEntity.ok(journalItemDbService.getAllByBookId(dto, id));
     }
 }

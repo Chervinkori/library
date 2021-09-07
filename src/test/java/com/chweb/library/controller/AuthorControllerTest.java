@@ -67,9 +67,11 @@ public class AuthorControllerTest {
     public void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(this.context)
                 .apply(documentationConfiguration(this.restDocumentation))
-                .alwaysDo(document("{class-name}/{method-name}",
+                .alwaysDo(document(
+                        "{class-name}/{method-name}",
                         preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())))
+                        preprocessResponse(prettyPrint())
+                ))
                 .build();
     }
 
@@ -100,6 +102,16 @@ public class AuthorControllerTest {
     }
 
     @Test
+    public void notFoundError() throws Exception {
+        TypicalError typicalError = TypicalError.ENTITY_NOT_FOUND;
+
+        String urlTemplate = URL_PREFIX + "/{id}";
+        mvc.perform(get(urlTemplate, -1))
+                .andExpect(status().is(typicalError.getHttpStatus().value()))
+                .andExpect(jsonPath("$.status", is(typicalError.toString())));
+    }
+
+    @Test
     public void getById() throws Exception {
         String urlTemplate = URL_PREFIX + "/{id}";
         mvc.perform(get(urlTemplate, entity.getId()))
@@ -116,19 +128,7 @@ public class AuthorControllerTest {
 
     @Test
     public void getAllWithPageable() throws Exception {
-        for (int i = 1; i <= 5; i++) {
-            AuthorEntity newEntity = new AuthorEntity();
-            newEntity.setFirstName("firstName" + i);
-            newEntity.setMiddleName("middleName" + i);
-            newEntity.setLastName("lastName" + i);
-            newEntity.setBirthDate(LocalDate.now());
-            newEntity.setDeathDate(LocalDate.now());
-            newEntity.setDescription("description" + i);
-            authorRepository.save(newEntity);
-        }
-
         int totalElements = authorRepository.findAllByActiveIsTrue().size();
-
         // Выводить по одному элементу на страницу
         mvc.perform(get(URL_PREFIX).queryParam("size", "1"))
                 .andExpect(status().isOk())

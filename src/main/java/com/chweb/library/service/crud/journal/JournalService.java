@@ -22,5 +22,9 @@ public interface JournalService {
 
     void delete(Long id);
 
+    PageableResponseDTO<JournalResponseDTO> getByLibrarianId(PageableRequestDTO dto, Long id);
+
+    PageableResponseDTO<JournalResponseDTO> getBySubscriberId(PageableRequestDTO dto, Long id);
+
     JournalResponseDTO toResponseDTO(JournalEntity entity);
 }

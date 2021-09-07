@@ -8,6 +8,7 @@ import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.entity.*;
 import com.chweb.library.repository.*;
+import com.chweb.library.service.crud.book.BookDbService;
 import com.chweb.library.service.crud.bookstate.BookStateDbService;
 import com.chweb.library.service.crud.exception.BooksIssuedLimitException;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,6 +41,9 @@ public class JournalDbService implements JournalService {
     private final LibrarianDbService librarianDbService;
     private final SubscriberDbService subscriberDbService;
     private final BookStateDbService bookStateDbService;
+    private final BookDbService bookDbService;
+
+    private final EntityManager em;
 
     @Override
     public JournalResponseDTO getById(Long id) {
@@ -89,17 +94,10 @@ public class JournalDbService implements JournalService {
             journalItemEntity.setBook(bookEntity);
             journalItemRepository.save(journalItemEntity);
 
-            // Список активных выданных книг (без даты возврата)
-            Collection<JournalItemEntity> issuedItemCollection = journalItemRepository.findAllByBookIdAndReturnDateIsNullAndActiveIsTrue(
-                    bookEntity.getId());
-            // Если книги кончились - обновляет статус книги
-            if (issuedItemCollection.size() >= bookEntity.getAmount()) {
-                bookEntity.setInStock(false);
-                bookRepository.save(bookEntity);
-            }
-
-            journalEntity.getJournalItems().add(journalItemEntity);
+            bookDbService.checkAndSetIssuedBook(bookEntity);
         }
+
+        em.refresh(journalEntity);
 
         return toResponseDTO(journalEntity);
     }
@@ -136,16 +134,24 @@ public class JournalDbService implements JournalService {
             item.setActive(false);
             journalItemRepository.save(item);
 
-            BookEntity bookEntity = item.getBook();
-            // Список активных выданных книг (без даты возврата)
-            Collection<JournalItemEntity> issuedItemCollection = journalItemRepository.findAllByBookIdAndReturnDateIsNullAndActiveIsTrue(
-                    bookEntity.getId());
-            // Если книги в наличии - обновляет статус книги
-            if (bookEntity.getAmount() > issuedItemCollection.size()) {
-                bookEntity.setInStock(true);
-                bookRepository.save(bookEntity);
-            }
+            bookDbService.checkAndSetIssuedBook(item.getBook());
         });
+    }
+
+    @Override
+    public PageableResponseDTO<JournalResponseDTO> getByLibrarianId(PageableRequestDTO dto, Long id) {
+        Page<JournalResponseDTO> page = journalRepository.findAllByLibrarianIdAndActiveIsTrue(PageableUtils.getPageableFromDTO(
+                dto), id).map(this::toResponseDTO);
+
+        return new PageableResponseDTO<>(page, dto.getSorting());
+    }
+
+    @Override
+    public PageableResponseDTO<JournalResponseDTO> getBySubscriberId(PageableRequestDTO dto, Long id) {
+        Page<JournalResponseDTO> page = journalRepository.findAllByAuthorIdAndActiveIsTrue(PageableUtils.getPageableFromDTO(
+                dto), id).map(this::toResponseDTO);
+
+        return new PageableResponseDTO<>(page, dto.getSorting());
     }
 
     @Override

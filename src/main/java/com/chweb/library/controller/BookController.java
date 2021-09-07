@@ -36,7 +36,8 @@ public class BookController {
     @GetMapping
     @ApiOperation(value = "Get all books")
     public ResponseEntity<PageableResponseDTO<BookResponseDTO>> getAll(@Valid PageableRequestDTO dto,
-                                                                       @RequestParam(name = "in-stock", required = false) Boolean inStock) {
+                                                                       @RequestParam(name = "in-stock", required = false)
+                                                                               Boolean inStock) {
         return ResponseEntity.ok(bookDbService.getAll(dto, inStock));
     }
 
@@ -57,5 +58,26 @@ public class BookController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookDbService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/publishing-house/{id}")
+    @ApiOperation(value = "Get books by publishing house id")
+    public ResponseEntity<PageableResponseDTO<BookResponseDTO>> getByPublishingHouseId(@Valid PageableRequestDTO dto,
+                                                                                       @PathVariable Long id) {
+        return ResponseEntity.ok(bookDbService.getByPublishingHouseId(dto, id));
+    }
+
+    @GetMapping("/theme/{id}")
+    @ApiOperation(value = "Get books by theme id")
+    public ResponseEntity<PageableResponseDTO<BookResponseDTO>> getByThemeId(@Valid PageableRequestDTO dto,
+                                                                             @PathVariable Long id) {
+        return ResponseEntity.ok(bookDbService.getByThemeId(dto, id));
+    }
+
+    @GetMapping("/author/{id}")
+    @ApiOperation(value = "Get books by author id")
+    public ResponseEntity<PageableResponseDTO<BookResponseDTO>> getByAuthorId(@Valid PageableRequestDTO dto,
+                                                                              @PathVariable Long id) {
+        return ResponseEntity.ok(bookDbService.getByAuthorId(dto, id));
     }
 }
