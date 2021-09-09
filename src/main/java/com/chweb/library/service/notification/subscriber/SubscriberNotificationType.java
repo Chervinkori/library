@@ -10,7 +10,8 @@ import lombok.Getter;
 public enum SubscriberNotificationType {
     BOOK_EXPIRE(
             "Issuing books has come to an end",
-            "Dear %s, the deadline for issuing books has come to an end (%s). Please return the books as soon as possible.\n\n" +
+            "Dear %s, the deadline for issuing books has come to an end (%s).\n" +
+                    "Please return the books as soon as possible.\n\n" +
                     "List of books:\n" +
                     "%s"
     );

@@ -13,10 +13,12 @@ spring:
     test-connection: false
     host: localhost
     port: 1025
-    from: test@mailhog.local
     properties:
       mail:
         smtp:
           auth: false
           starttls:
             enabled: false
+
+library:
+  book-use-number-days: 1
