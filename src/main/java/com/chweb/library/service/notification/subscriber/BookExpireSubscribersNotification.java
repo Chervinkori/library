@@ -31,7 +31,7 @@ public class BookExpireSubscribersNotification {
     private final EntityManager em;
     private final SenderNotification senderMailNotification;
 
-    private final SubscriberNotificationType type = SubscriberNotificationType.BOOK_EXPIRE;
+    private final SubscriberNotificationType TYPE = SubscriberNotificationType.BOOK_EXPIRE;
 
     @Value("${library.book-use-number-days}")
     private Integer bookUseNumberDays;
@@ -54,14 +54,14 @@ public class BookExpireSubscribersNotification {
                     .collect(Collectors.joining("\n"));
 
             senderMailNotification.sendSimpleMessage(
-                    subscriber.getEmail(),
-                    type.getSubject(),
+                    TYPE.getSubject(),
                     String.format(
-                            type.getMessageTemplate(),
+                            TYPE.getMessageTemplate(),
                             subscriber.getFIO(),
                             journal.getIssueDate().toString(),
                             bookItems
-                    )
+                    ),
+                    subscriber.getEmail()
             );
         }
     }

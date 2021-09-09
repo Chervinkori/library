@@ -11,9 +11,9 @@ spring:
     enabled: false
   mail:
     test-connection: false
-    host: mailhog
+    host: localhost
     port: 1025
-    from: chervinko@mailhog.local
+    from: test@mailhog.local
     properties:
       mail:
         smtp:
