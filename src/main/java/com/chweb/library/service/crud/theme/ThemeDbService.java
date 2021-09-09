@@ -7,6 +7,7 @@ import com.chweb.library.model.ThemeUpdateRequestDTO;
 import com.chweb.library.repository.ThemeRepository;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,8 @@ import java.util.stream.Collectors;
  * @author chervinko <br>
  * 27.08.2021
  */
-@Service
+@Primary
+@Service("themeDbService")
 @RequiredArgsConstructor
 public class ThemeDbService implements ThemeService {
     private final ThemeRepository themeRepository;

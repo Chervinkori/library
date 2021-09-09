@@ -5,7 +5,7 @@ import com.chweb.library.dto.journal.JournalResponseDTO;
 import com.chweb.library.dto.journal.JournalUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
-import com.chweb.library.service.crud.journal.JournalDbService;
+import com.chweb.library.service.crud.journal.JournalService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Api(value = "journal", description = "Api to provide access to the journal's data", tags = {"journal"})
 public class JournalController {
-    private final JournalDbService journalDbService;
+    private final JournalService journalDbService;
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get journal by id")

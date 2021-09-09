@@ -7,13 +7,14 @@ import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.entity.*;
 import com.chweb.library.repository.*;
-import com.chweb.library.service.crud.author.AuthorDbService;
+import com.chweb.library.service.crud.author.AuthorService;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import com.chweb.library.service.crud.exception.UpdateBookAmountException;
-import com.chweb.library.service.crud.publishinghouse.PublishingHouseDbService;
-import com.chweb.library.service.crud.theme.ThemeDbService;
+import com.chweb.library.service.crud.publishinghouse.PublishingHouseService;
+import com.chweb.library.service.crud.theme.ThemeService;
 import com.chweb.library.util.PageableUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,8 @@ import java.util.stream.Collectors;
  * @author chervinko <br>
  * 30.08.2021
  */
-@Service
+@Primary
+@Service("bookDbService")
 @RequiredArgsConstructor
 public class BookDbService implements BookService {
     private final BookRepository bookRepository;
@@ -35,9 +37,9 @@ public class BookDbService implements BookService {
     private final AuthorRepository authorRepository;
     private final JournalItemRepository journalItemRepository;
 
-    private final PublishingHouseDbService publishingHouseDbService;
-    private final AuthorDbService authorDbService;
-    private final ThemeDbService themeDbService;
+    private final PublishingHouseService publishingHouseDbService;
+    private final AuthorService authorDbService;
+    private final ThemeService themeDbService;
 
     @Override
     public BookResponseDTO getById(Long id, Boolean inStock) {
@@ -190,7 +192,7 @@ public class BookDbService implements BookService {
 
     @Override
     public BookResponseDTO toResponseDTO(BookEntity entity) {
-        BookResponseDTO dto = new BookResponseDTO();
+        final BookResponseDTO dto = new BookResponseDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setPublishYear(entity.getPublishYear());

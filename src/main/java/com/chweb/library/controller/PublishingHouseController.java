@@ -4,7 +4,7 @@ import com.chweb.library.api.PublishingHouseApi;
 import com.chweb.library.model.PublishingHouseCreateRequestDTO;
 import com.chweb.library.model.PublishingHouseResponseDTO;
 import com.chweb.library.model.PublishingHouseUpdateRequestDTO;
-import com.chweb.library.service.crud.publishinghouse.PublishingHouseDbService;
+import com.chweb.library.service.crud.publishinghouse.PublishingHouseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import javax.validation.Valid;
         description = "Api for accessing data of the book publisher",
         tags = {"publishing-house"})
 public class PublishingHouseController implements PublishingHouseApi {
-    private final PublishingHouseDbService publishingHouseDbService;
+    private final PublishingHouseService publishingHouseDbService;
 
     @Override
     @ApiOperation(value = "Create publishing house")

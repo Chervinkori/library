@@ -5,7 +5,7 @@ import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.dto.subscriber.SubscriberCreateRequestDTO;
 import com.chweb.library.dto.subscriber.SubscriberResponseDTO;
 import com.chweb.library.dto.subscriber.SubscriberUpdateRequestDTO;
-import com.chweb.library.service.crud.subscriber.SubscriberDbService;
+import com.chweb.library.service.crud.subscriber.SubscriberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Api(value = "subscriber", description = "Api for accessing subscriber data", tags = {"subscriber"})
 public class SubscriberController {
-    private final SubscriberDbService subscriberDbService;
+    private final SubscriberService subscriberDbService;
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get subscriber by id")

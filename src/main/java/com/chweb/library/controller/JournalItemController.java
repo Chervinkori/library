@@ -5,7 +5,7 @@ import com.chweb.library.dto.journalitem.JournalItemResponseDTO;
 import com.chweb.library.dto.journalitem.JournalItemUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
-import com.chweb.library.service.crud.journalitem.JournalItemDbService;
+import com.chweb.library.service.crud.journalitem.JournalItemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Api(value = "journal-item", description = "Api to provide access to the journal item's data", tags = {"journal-item"})
 public class JournalItemController {
-    private final JournalItemDbService journalItemDbService;
+    private final JournalItemService journalItemDbService;
 
     @GetMapping("/{journalId}/{bookId}")
     @ApiOperation(value = "Get journal item by id")

@@ -10,6 +10,7 @@ import com.chweb.library.repository.SubscriberRepository;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import com.chweb.library.util.PageableUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author chervinko <br>
  * 30.08.2021
  */
-@Service
+@Primary
+@Service("subscriberDbService")
 @RequiredArgsConstructor
 public class SubscriberDbService implements SubscriberService {
     private final SubscriberRepository subscriberRepository;
@@ -50,6 +52,7 @@ public class SubscriberDbService implements SubscriberService {
         entity.setBirthDate(dto.getBirthDate());
         entity.setPassportData(dto.getPassportData());
         entity.setPhoneNumber(dto.getPhoneNumber());
+        entity.setEmail(dto.getEmail());
         entity.setAddress(dto.getAddress());
 
         return toResponseDTO(subscriberRepository.save(entity));
@@ -66,6 +69,7 @@ public class SubscriberDbService implements SubscriberService {
         entity.setBirthDate(dto.getBirthDate());
         entity.setPassportData(dto.getPassportData());
         entity.setPhoneNumber(dto.getPhoneNumber());
+        entity.setEmail(dto.getEmail());
         entity.setAddress(dto.getAddress());
 
         if (dto.getMiddleName() != null) {
@@ -94,6 +98,7 @@ public class SubscriberDbService implements SubscriberService {
         dto.setBirthDate(entity.getBirthDate());
         dto.setPassportData(entity.getPassportData());
         dto.setPhoneNumber(entity.getPhoneNumber());
+        dto.setEmail(entity.getEmail());
         dto.setAddress(entity.getAddress());
 
         return dto;

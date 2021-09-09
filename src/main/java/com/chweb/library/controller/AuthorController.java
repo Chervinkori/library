@@ -5,7 +5,7 @@ import com.chweb.library.dto.author.AuthorResponseDTO;
 import com.chweb.library.dto.author.AuthorUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
-import com.chweb.library.service.crud.author.AuthorDbService;
+import com.chweb.library.service.crud.author.AuthorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Api(value = "author", description = "Api to provide access to the author's data", tags = {"author"})
 public class AuthorController {
-    private final AuthorDbService authorDbService;
+    private final AuthorService authorDbService;
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get author by id")

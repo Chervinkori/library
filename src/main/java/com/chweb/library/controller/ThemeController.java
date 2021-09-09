@@ -4,7 +4,7 @@ import com.chweb.library.api.ThemeApi;
 import com.chweb.library.model.ThemeCreateRequestDTO;
 import com.chweb.library.model.ThemeResponseDTO;
 import com.chweb.library.model.ThemeUpdateRequestDTO;
-import com.chweb.library.service.crud.theme.ThemeDbService;
+import com.chweb.library.service.crud.theme.ThemeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Api(value = "theme", description = "Api for accessing reference data by book topics", tags = {"theme"})
 public class ThemeController implements ThemeApi {
-    private final ThemeDbService themeDbService;
+    private final ThemeService themeDbService;
 
     @Override
     @ApiOperation(value = "Create theme")

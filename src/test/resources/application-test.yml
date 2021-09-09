@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test_db;
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+  mail:
+    test-connection: false
+    host: mailhog
+    port: 1025
+    from: chervinko@mailhog.local
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enabled: false

@@ -13,13 +13,14 @@ import com.chweb.library.repository.BookRepository;
 import com.chweb.library.repository.BookStateRepository;
 import com.chweb.library.repository.JournalItemRepository;
 import com.chweb.library.repository.JournalRepository;
-import com.chweb.library.service.crud.book.BookDbService;
-import com.chweb.library.service.crud.bookstate.BookStateDbService;
+import com.chweb.library.service.crud.book.BookService;
+import com.chweb.library.service.crud.bookstate.BookStateService;
 import com.chweb.library.service.crud.exception.BooksIssuedLimitException;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import com.chweb.library.service.crud.exception.NotUniqException;
 import com.chweb.library.util.PageableUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,8 @@ import java.util.Arrays;
  * @author chervinko <br>
  * 05.09.2021
  */
-@Service
+@Primary
+@Service("journalItemDbService")
 @RequiredArgsConstructor
 public class JournalItemDbService implements JournalItemService {
     private final JournalItemRepository journalItemRepository;
@@ -38,8 +40,8 @@ public class JournalItemDbService implements JournalItemService {
     private final BookRepository bookRepository;
     private final BookStateRepository bookStateRepository;
 
-    private final BookStateDbService bookStateDbService;
-    private final BookDbService bookDbService;
+    private final BookStateService bookStateDbService;
+    private final BookService bookDbService;
 
     @Override
     public JournalItemResponseDTO getById(Long journalId, Long bookId) {

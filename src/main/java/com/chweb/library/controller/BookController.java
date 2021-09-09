@@ -5,7 +5,7 @@ import com.chweb.library.dto.book.BookResponseDTO;
 import com.chweb.library.dto.book.BookUpdateRequestDTO;
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
-import com.chweb.library.service.crud.book.BookDbService;
+import com.chweb.library.service.crud.book.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Api(value = "book", description = "Api to provide access to the book's data", tags = {"book"})
 public class BookController {
-    private final BookDbService bookDbService;
+    private final BookService bookDbService;
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get book by id")

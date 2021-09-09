@@ -8,14 +8,15 @@ import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.PageableResponseDTO;
 import com.chweb.library.entity.*;
 import com.chweb.library.repository.*;
-import com.chweb.library.service.crud.book.BookDbService;
-import com.chweb.library.service.crud.bookstate.BookStateDbService;
+import com.chweb.library.service.crud.book.BookService;
+import com.chweb.library.service.crud.bookstate.BookStateService;
 import com.chweb.library.service.crud.exception.BooksIssuedLimitException;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
-import com.chweb.library.service.crud.librarian.LibrarianDbService;
-import com.chweb.library.service.crud.subscriber.SubscriberDbService;
+import com.chweb.library.service.crud.librarian.LibrarianService;
+import com.chweb.library.service.crud.subscriber.SubscriberService;
 import com.chweb.library.util.PageableUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,8 @@ import java.util.HashSet;
  * @author chervinko <br>
  * 30.08.2021
  */
-@Service
+@Primary
+@Service("journalDbService")
 @RequiredArgsConstructor
 public class JournalDbService implements JournalService {
     private final JournalRepository journalRepository;
@@ -38,10 +40,10 @@ public class JournalDbService implements JournalService {
     private final SubscriberRepository subscriberRepository;
     private final BookRepository bookRepository;
 
-    private final LibrarianDbService librarianDbService;
-    private final SubscriberDbService subscriberDbService;
-    private final BookStateDbService bookStateDbService;
-    private final BookDbService bookDbService;
+    private final LibrarianService librarianDbService;
+    private final SubscriberService subscriberDbService;
+    private final BookStateService bookStateDbService;
+    private final BookService bookDbService;
 
     private final EntityManager em;
 

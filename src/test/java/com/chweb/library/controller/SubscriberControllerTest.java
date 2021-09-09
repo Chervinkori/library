@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -41,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles(profiles = "test")
 public class SubscriberControllerTest {
     private static final String URL_PREFIX = "/subscriber";
 
@@ -83,6 +85,7 @@ public class SubscriberControllerTest {
         entity.setBirthDate(LocalDate.now().minusYears(25));
         entity.setPassportData("passportData");
         entity.setPhoneNumber("+7 (999) 999-99-99");
+        entity.setEmail("info@library.com");
         entity.setAddress("address");
         subscriberRepository.save(entity);
 
@@ -92,6 +95,7 @@ public class SubscriberControllerTest {
         createRequestDTO.setBirthDate(LocalDate.now().minusYears(25));
         createRequestDTO.setPassportData("createPassportData");
         createRequestDTO.setPhoneNumber("+7 (999) 999-99-99");
+        createRequestDTO.setEmail("create@library.com");
         createRequestDTO.setAddress("createAddress");
 
         updateRequestDTO.setId(entity.getId());
@@ -101,6 +105,7 @@ public class SubscriberControllerTest {
         updateRequestDTO.setBirthDate(LocalDate.now().minusYears(25));
         updateRequestDTO.setPassportData("updatePassportData");
         updateRequestDTO.setPhoneNumber("+7 (999) 999-99-99");
+        updateRequestDTO.setEmail("update@library.com");
         updateRequestDTO.setAddress("updateAddress");
     }
 
@@ -130,18 +135,6 @@ public class SubscriberControllerTest {
 
     @Test
     public void getAllWithPageable() throws Exception {
-        for (int i = 1; i <= 5; i++) {
-            SubscriberEntity newEntity = new SubscriberEntity();
-            newEntity.setFirstName("firstName" + i);
-            newEntity.setMiddleName("middleName" + i);
-            newEntity.setLastName("lastName" + i);
-            newEntity.setBirthDate(LocalDate.now());
-            newEntity.setPassportData("passportData" + i);
-            newEntity.setPhoneNumber("+7 (999) 999-99-99");
-            newEntity.setAddress("address" + i);
-            subscriberRepository.save(newEntity);
-        }
-
         int totalElements = subscriberRepository.findAllByActiveIsTrue().size();
 
         // Выводить по одному элементу на страницу

@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -41,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles(profiles = "test")
 public class LibrarianControllerTest {
     private static final String URL_PREFIX = "/librarian";
 
@@ -127,17 +129,6 @@ public class LibrarianControllerTest {
 
     @Test
     public void getAllWithPageable() throws Exception {
-        for (int i = 1; i <= 5; i++) {
-            LibrarianEntity newEntity = new LibrarianEntity();
-            newEntity.setFirstName("firstName" + i);
-            newEntity.setMiddleName("middleName" + i);
-            newEntity.setLastName("lastName" + i);
-            newEntity.setPhoneNumber("+7 (999) 999-999-99" + i);
-            newEntity.setAddress("address" + i);
-            newEntity.setEmploymentDate(LocalDate.now());
-            librarianRepository.save(newEntity);
-        }
-
         int totalElements = librarianRepository.findAllByActiveIsTrue().size();
 
         // Выводить по одному элементу на страницу

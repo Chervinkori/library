@@ -2,6 +2,7 @@ package com.chweb.library.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -43,9 +44,22 @@ public class SubscriberEntity extends BaseEntity {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
+    @Column(name = "email", nullable = false)
+    private String email;
+
     @Column(name = "address", nullable = false)
     private String address;
 
     @OneToMany(mappedBy = "subscriber")
     private Collection<JournalEntity> journals;
+
+    public String getFIO() {
+        StringBuilder sb = new StringBuilder(firstName);
+        if (!StringUtils.isEmpty(middleName)) {
+            sb.append(" ").append(middleName);
+        }
+        sb.append(" ").append(lastName);
+
+        return sb.toString();
+    }
 }

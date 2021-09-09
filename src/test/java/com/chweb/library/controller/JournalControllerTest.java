@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -45,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles(profiles = "test")
 public class JournalControllerTest {
     private static final String URL_PREFIX = "/journal";
 
@@ -144,14 +146,6 @@ public class JournalControllerTest {
 
     @Test
     public void getAllWithPageable() throws Exception {
-        for (int i = 1; i <= 5; i++) {
-            JournalEntity newEntity = new JournalEntity();
-            newEntity.setIssueDate(LocalDate.now().minusYears(50 - i));
-            newEntity.setLibrarian(librarianEntity);
-            newEntity.setSubscriber(subscriberEntity);
-            journalRepository.save(newEntity);
-        }
-
         int totalElements = journalRepository.findAllByActiveIsTrue().size();
 
         // Выводить по одному элементу на страницу
@@ -247,6 +241,7 @@ public class JournalControllerTest {
         subscriberEntity.setBirthDate(LocalDate.now().minusYears(25));
         subscriberEntity.setPassportData("passportData");
         subscriberEntity.setPhoneNumber("+7 (999) 999-99-99");
+        subscriberEntity.setEmail("info@library.ru");
         subscriberEntity.setAddress("address");
         subscriberRepository.save(subscriberEntity);
     }

@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -49,6 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles(profiles = "test")
 public class BookControllerTest {
     private static final String URL_PREFIX = "/book";
 
@@ -186,18 +188,6 @@ public class BookControllerTest {
 
     @Test
     public void getAllWithPageable() throws Exception {
-        for (int i = 1; i <= 5; i++) {
-            BookEntity newEntity = new BookEntity();
-            newEntity.setName("name" + i);
-            newEntity.setPublishYear(1950 + i);
-            newEntity.setAmount(50 + i);
-            newEntity.setDescription("description" + i);
-            newEntity.setPublishingHouse(entity.getPublishingHouse());
-            newEntity.setThemes(new HashSet<>(entity.getThemes()));
-            newEntity.setAuthors(new HashSet<>(entity.getAuthors()));
-            bookRepository.save(newEntity);
-        }
-
         int totalElements = bookRepository.findAllByActiveIsTrue().size();
 
         // Выводить по одному элементу на страницу
@@ -372,6 +362,7 @@ public class BookControllerTest {
         subscriberEntity.setBirthDate(LocalDate.now().minusYears(25));
         subscriberEntity.setPassportData("passportData");
         subscriberEntity.setPhoneNumber("+7 (999) 999-99-99");
+        subscriberEntity.setEmail("info@library.ru");
         subscriberEntity.setAddress("address");
         subscriberRepository.save(subscriberEntity);
     }

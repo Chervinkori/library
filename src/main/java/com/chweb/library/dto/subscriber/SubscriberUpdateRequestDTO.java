@@ -57,6 +57,11 @@ public class SubscriberUpdateRequestDTO {
 
     @NotNull
     @NotBlank
+    @Email
+    String email;
+
+    @NotNull
+    @NotBlank
     @Size(min = 2)
     String address;
 }

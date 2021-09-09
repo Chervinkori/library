@@ -4,7 +4,7 @@ import com.chweb.library.api.BookStateApi;
 import com.chweb.library.model.BookStateCreateRequestDTO;
 import com.chweb.library.model.BookStateResponseDTO;
 import com.chweb.library.model.BookStateUpdateRequestDTO;
-import com.chweb.library.service.crud.bookstate.BookStateDbService;
+import com.chweb.library.service.crud.bookstate.BookStateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import javax.validation.Valid;
         description = "Api to provide access to data of the book evaluation reference",
         tags = {"book-state"})
 public class BookStateController implements BookStateApi {
-    private final BookStateDbService bookStateDbService;
+    private final BookStateService bookStateDbService;
 
     @Override
     @ApiOperation(value = "Create book state")

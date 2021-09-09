@@ -7,6 +7,7 @@ import com.chweb.library.model.PublishingHouseUpdateRequestDTO;
 import com.chweb.library.repository.PublishingHouseRepository;
 import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,8 @@ import java.util.stream.Collectors;
  * @author chervinko <br>
  * 27.08.2021
  */
-@Service
+@Primary
+@Service("publishingHouseDbService")
 @RequiredArgsConstructor
 public class PublishingHouseDbService implements PublishingHouseService {
     private final PublishingHouseRepository publishingHouseRepository;

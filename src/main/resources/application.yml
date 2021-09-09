@@ -8,4 +8,24 @@ spring:
       ddl-auto: validate
   flyway:
     enabled: true
-    locations: filesystem:src/main/resources/migration
+    locations: classpath:migration
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    schemas: public
+  mail:
+    from: info@library.ru
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+cron:
+  book-use-time-expire:
+    expression: "0 8 * * * *"
+
+library:
+  book-use-number-days: 14
