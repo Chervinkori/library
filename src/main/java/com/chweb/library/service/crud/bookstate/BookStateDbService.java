@@ -1,11 +1,11 @@
 package com.chweb.library.service.crud.bookstate;
 
 import com.chweb.library.entity.BookStateEntity;
+import com.chweb.library.exception.EntityNotFoundException;
 import com.chweb.library.model.BookStateCreateRequestDTO;
 import com.chweb.library.model.BookStateResponseDTO;
 import com.chweb.library.model.BookStateUpdateRequestDTO;
 import com.chweb.library.repository.BookStateRepository;
-import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

@@ -6,4 +6,6 @@ package com.chweb.library.service.notification;
  */
 public interface SenderNotification {
     void sendSimpleMessage(String subject, String text, String... to);
+
+    void sendSimpleMessage(Notification notification);
 }

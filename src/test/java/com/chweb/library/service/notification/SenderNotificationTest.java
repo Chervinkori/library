@@ -1,6 +1,6 @@
 package com.chweb.library.service.notification;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,12 +14,21 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @ActiveProfiles(profiles = "test")
-class SenderNotificationTest {
+public class SenderNotificationTest {
     @Autowired
     private SenderNotification senderMailNotification;
 
     @Test
-    void sendSimpleMessage() {
+    public void sendSimpleMessage() {
         senderMailNotification.sendSimpleMessage("Test Subject", "Test body text", "test@library.ru");
+    }
+
+    @Test
+    public void sendSimpleMessageAnother() {
+        senderMailNotification.sendSimpleMessage(new Notification(
+                new String[]{"test@library.ru"},
+                "Test Subject",
+                "Test body text"
+        ));
     }
 }

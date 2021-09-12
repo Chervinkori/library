@@ -47,6 +47,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>2.5.4</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <version>5.7.0</version>
@@ -100,12 +106,6 @@
             <artifactId>commons-text</artifactId>
             <version>1.9</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-            <version>2.5.4</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -122,6 +122,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -141,6 +142,39 @@
                                 <interfaceOnly>true</interfaceOnly>
                             </configOptions>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/chweb/library/LibraryApplication.class</exclude>
+                        <exclude>com/chweb/library/model/*</exclude>
+                        <exclude>com/chweb/library/dto/**/*</exclude>
+                        <exclude>com/chweb/library/api/*</exclude>
+                        <exclude>com/chweb/library/entity/*</exclude>
+                        <exclude>com/chweb/library/handler/ResponseExceptionHandler.class</exclude>
+                        <exclude>com/chweb/library/exception/*</exclude>
+                        <exclude>com/chweb/library/conf/Config.class</exclude>
+                        <exclude>com/chweb/library/service/notification/Notification.class</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

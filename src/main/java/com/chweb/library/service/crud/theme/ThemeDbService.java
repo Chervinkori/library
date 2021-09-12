@@ -1,11 +1,11 @@
 package com.chweb.library.service.crud.theme;
 
 import com.chweb.library.entity.ThemeEntity;
+import com.chweb.library.exception.EntityNotFoundException;
 import com.chweb.library.model.ThemeCreateRequestDTO;
 import com.chweb.library.model.ThemeResponseDTO;
 import com.chweb.library.model.ThemeUpdateRequestDTO;
 import com.chweb.library.repository.ThemeRepository;
-import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

@@ -30,4 +30,9 @@ public class SenderMailNotification implements SenderNotification {
         message.setText(text);
         emailSender.send(message);
     }
+
+    @Async
+    public void sendSimpleMessage(Notification notification) {
+        sendSimpleMessage(notification.getSubject(), notification.getText(), notification.getTo());
+    }
 }

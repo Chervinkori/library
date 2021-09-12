@@ -1,11 +1,11 @@
 package com.chweb.library.service.crud.publishinghouse;
 
 import com.chweb.library.entity.PublishingHouseEntity;
+import com.chweb.library.exception.EntityNotFoundException;
 import com.chweb.library.model.PublishingHouseCreateRequestDTO;
 import com.chweb.library.model.PublishingHouseResponseDTO;
 import com.chweb.library.model.PublishingHouseUpdateRequestDTO;
 import com.chweb.library.repository.PublishingHouseRepository;
-import com.chweb.library.service.crud.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

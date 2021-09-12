@@ -1,4 +1,4 @@
-package com.chweb.library.service.crud.exception;
+package com.chweb.library.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

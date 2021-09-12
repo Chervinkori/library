@@ -2,10 +2,10 @@ package com.chweb.library.handler;
 
 import com.chweb.library.dto.response.ResponseErrorDTO;
 import com.chweb.library.dto.response.TypicalError;
-import com.chweb.library.service.crud.exception.BooksIssuedLimitException;
-import com.chweb.library.service.crud.exception.EntityNotFoundException;
-import com.chweb.library.service.crud.exception.NotUniqException;
-import com.chweb.library.service.crud.exception.UpdateBookAmountException;
+import com.chweb.library.exception.BooksIssuedLimitException;
+import com.chweb.library.exception.EntityNotFoundException;
+import com.chweb.library.exception.NotUniqException;
+import com.chweb.library.exception.UpdateBookAmountException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.ResponseEntity;
