@@ -9,6 +9,7 @@ import com.chweb.library.entity.SubscriberEntity;
 import com.chweb.library.exception.EntityNotFoundException;
 import com.chweb.library.repository.SubscriberRepository;
 import com.chweb.library.util.PageableUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SubscriberDbService implements SubscriberService {
     private final SubscriberRepository subscriberRepository;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public SubscriberResponseDTO getById(Long id) {
@@ -90,17 +93,6 @@ public class SubscriberDbService implements SubscriberService {
 
     @Override
     public SubscriberResponseDTO toResponseDTO(SubscriberEntity entity) {
-        SubscriberResponseDTO dto = new SubscriberResponseDTO();
-        dto.setId(entity.getId());
-        dto.setFirstName(entity.getFirstName());
-        dto.setMiddleName(entity.getMiddleName());
-        dto.setLastName(entity.getLastName());
-        dto.setBirthDate(entity.getBirthDate());
-        dto.setPassportData(entity.getPassportData());
-        dto.setPhoneNumber(entity.getPhoneNumber());
-        dto.setEmail(entity.getEmail());
-        dto.setAddress(entity.getAddress());
-
-        return dto;
+        return objectMapper.convertValue(entity, SubscriberResponseDTO.class);
     }
 }

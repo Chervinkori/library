@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author chervinko <br>
@@ -27,7 +27,7 @@ public class JournalUpdateRequestDTO {
     @NotNull
     @PastOrPresent
     @JsonProperty("issue_date")
-    LocalDate issueDate;
+    LocalDateTime issueDate;
 
     @NotNull
     @Positive

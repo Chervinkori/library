@@ -15,6 +15,7 @@ import com.chweb.library.service.crud.bookstate.BookStateService;
 import com.chweb.library.service.crud.librarian.LibrarianService;
 import com.chweb.library.service.crud.subscriber.SubscriberService;
 import com.chweb.library.util.PageableUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,7 @@ public class JournalDbService implements JournalService {
     private final BookService bookDbService;
 
     private final EntityManager em;
+    private final ObjectMapper objectMapper;
 
     @Override
     public JournalResponseDTO getById(Long id) {
@@ -158,9 +160,7 @@ public class JournalDbService implements JournalService {
 
     @Override
     public JournalResponseDTO toResponseDTO(JournalEntity entity) {
-        JournalResponseDTO dto = new JournalResponseDTO();
-        dto.setId(entity.getId());
-        dto.setIssueDate(entity.getIssueDate());
+        JournalResponseDTO dto = objectMapper.convertValue(entity, JournalResponseDTO.class);
         dto.setLibrarian(librarianDbService.toResponseDTO(entity.getLibrarian()));
         dto.setSubscriber(subscriberDbService.toResponseDTO(entity.getSubscriber()));
 

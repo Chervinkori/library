@@ -6,6 +6,7 @@ import com.chweb.library.model.ThemeCreateRequestDTO;
 import com.chweb.library.model.ThemeResponseDTO;
 import com.chweb.library.model.ThemeUpdateRequestDTO;
 import com.chweb.library.repository.ThemeRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ThemeDbService implements ThemeService {
     private final ThemeRepository themeRepository;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public ThemeResponseDTO getById(Long id) {
@@ -84,11 +87,6 @@ public class ThemeDbService implements ThemeService {
 
     @Override
     public ThemeResponseDTO toResponseDTO(ThemeEntity entity) {
-        ThemeResponseDTO dto = new ThemeResponseDTO();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setDescription(entity.getDescription());
-
-        return dto;
+        return objectMapper.convertValue(entity, ThemeResponseDTO.class);
     }
 }

@@ -6,6 +6,7 @@ import com.chweb.library.model.PublishingHouseCreateRequestDTO;
 import com.chweb.library.model.PublishingHouseResponseDTO;
 import com.chweb.library.model.PublishingHouseUpdateRequestDTO;
 import com.chweb.library.repository.PublishingHouseRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PublishingHouseDbService implements PublishingHouseService {
     private final PublishingHouseRepository publishingHouseRepository;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public PublishingHouseResponseDTO getById(Long id) {
@@ -84,11 +87,6 @@ public class PublishingHouseDbService implements PublishingHouseService {
 
     @Override
     public PublishingHouseResponseDTO toResponseDTO(PublishingHouseEntity entity) {
-        PublishingHouseResponseDTO dto = new PublishingHouseResponseDTO();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setDescription(entity.getDescription());
-
-        return dto;
+        return objectMapper.convertValue(entity, PublishingHouseResponseDTO.class);
     }
 }

@@ -6,6 +6,7 @@ import com.chweb.library.model.BookStateCreateRequestDTO;
 import com.chweb.library.model.BookStateResponseDTO;
 import com.chweb.library.model.BookStateUpdateRequestDTO;
 import com.chweb.library.repository.BookStateRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookStateDbService implements BookStateService {
     private final BookStateRepository bookStateRepository;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public BookStateResponseDTO getById(Long id) {
@@ -84,11 +87,6 @@ public class BookStateDbService implements BookStateService {
 
     @Override
     public BookStateResponseDTO toResponseDTO(BookStateEntity entity) {
-        BookStateResponseDTO dto = new BookStateResponseDTO();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setDescription(entity.getDescription());
-
-        return dto;
+        return objectMapper.convertValue(entity, BookStateResponseDTO.class);
     }
 }

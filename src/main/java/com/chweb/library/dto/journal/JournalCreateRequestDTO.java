@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 /**
@@ -25,7 +25,7 @@ public class JournalCreateRequestDTO {
     @NotNull
     @PastOrPresent
     @JsonProperty("issue_date")
-    LocalDate issueDate;
+    LocalDateTime issueDate;
 
     @NotNull
     @Positive

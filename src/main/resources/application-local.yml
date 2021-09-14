@@ -1,0 +1,16 @@
+# Parameters are suitable in case of using docker-compose.yml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: user
+    password: password
+  mail:
+    test-connection: false
+    host: localhost
+    port: 1025
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enabled: false

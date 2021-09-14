@@ -19,6 +19,7 @@ import com.chweb.library.repository.JournalRepository;
 import com.chweb.library.service.crud.book.BookService;
 import com.chweb.library.service.crud.bookstate.BookStateService;
 import com.chweb.library.util.PageableUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,8 @@ public class JournalItemDbService implements JournalItemService {
 
     private final BookStateService bookStateDbService;
     private final BookService bookDbService;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public JournalItemResponseDTO getById(Long journalId, Long bookId) {
@@ -136,14 +139,11 @@ public class JournalItemDbService implements JournalItemService {
     @Transactional
     public void delete(Long journalId, Long bookId) {
         JournalItemEntity entity = journalItemRepository.findByIdAndActiveIsTrue(new JournalItemEntity.JournalItemId(
-                        journalId,
-                        bookId
-                ))
+                        journalId, bookId))
                 .orElseThrow(() -> new EntityNotFoundException(
                         JournalItemEntity.class,
                         Arrays.toString(new Long[]{journalId, bookId})
                 ));
-
         entity.setActive(false);
         journalItemRepository.save(entity);
 
@@ -160,15 +160,12 @@ public class JournalItemDbService implements JournalItemService {
 
     @Override
     public JournalItemResponseDTO toResponseDTO(JournalItemEntity entity) {
-        JournalItemResponseDTO dto = new JournalItemResponseDTO();
+        JournalItemResponseDTO dto = objectMapper.convertValue(entity, JournalItemResponseDTO.class);
         dto.setJournalId(entity.getJournal().getId());
         dto.setBookId(entity.getBook().getId());
 
         if (entity.getState() != null) {
             dto.setState(bookStateDbService.toResponseDTO(entity.getState()));
-        }
-        if (entity.getReturnDate() != null) {
-            dto.setReturnDate(entity.getReturnDate());
         }
 
         return dto;

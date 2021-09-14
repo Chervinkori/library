@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 /**
@@ -22,7 +22,7 @@ public class JournalResponseDTO {
     Long id;
 
     @JsonProperty("issue_date")
-    LocalDate issueDate;
+    LocalDateTime issueDate;
 
     LibrarianResponseDTO librarian;
 

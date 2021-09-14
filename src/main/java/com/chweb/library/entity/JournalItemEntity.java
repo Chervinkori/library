@@ -1,5 +1,7 @@
 package com.chweb.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,21 +30,26 @@ public class JournalItemEntity extends BaseEntity {
     @EmbeddedId
     private JournalItemId id = new JournalItemId();
 
+    @JsonIgnore
     @ManyToOne
     @MapsId("journalId")
     private JournalEntity journal;
 
+    @JsonIgnore
     @ManyToOne
     @MapsId("bookId")
     private BookEntity book;
 
+    @JsonProperty("update_date")
     @LastModifiedDate
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
+    @JsonProperty("return_date")
     @Column(name = "return_date")
     private LocalDate returnDate;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "book_state_id")
     private BookStateEntity state;

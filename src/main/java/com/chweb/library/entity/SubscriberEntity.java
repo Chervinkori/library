@@ -1,5 +1,7 @@
 package com.chweb.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -26,21 +28,27 @@ public class SubscriberEntity extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @JsonProperty("first_name")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
+    @JsonProperty("middle_name")
     @Column(name = "middle_name")
     private String middleName;
 
+    @JsonProperty("last_name")
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @JsonProperty("birth_date")
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
+    @JsonProperty("passport_data")
     @Column(name = "passport_data", nullable = false)
     private String passportData;
 
+    @JsonProperty("phone_number")
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
@@ -50,6 +58,7 @@ public class SubscriberEntity extends BaseEntity {
     @Column(name = "address", nullable = false)
     private String address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "subscriber")
     private Collection<JournalEntity> journals;
 

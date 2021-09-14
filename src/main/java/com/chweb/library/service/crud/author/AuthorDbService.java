@@ -9,6 +9,7 @@ import com.chweb.library.entity.AuthorEntity;
 import com.chweb.library.exception.EntityNotFoundException;
 import com.chweb.library.repository.AuthorRepository;
 import com.chweb.library.util.PageableUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthorDbService implements AuthorService {
     private final AuthorRepository authorRepository;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public AuthorResponseDTO getById(Long id) {
@@ -89,15 +92,6 @@ public class AuthorDbService implements AuthorService {
 
     @Override
     public AuthorResponseDTO toResponseDTO(AuthorEntity entity) {
-        AuthorResponseDTO dto = new AuthorResponseDTO();
-        dto.setId(entity.getId());
-        dto.setFirstName(entity.getFirstName());
-        dto.setMiddleName(entity.getMiddleName());
-        dto.setLastName(entity.getLastName());
-        dto.setBirthDate(entity.getBirthDate());
-        dto.setDeathDate(entity.getDeathDate());
-        dto.setDescription(entity.getDescription());
-
-        return dto;
+        return objectMapper.convertValue(entity, AuthorResponseDTO.class);
     }
 }

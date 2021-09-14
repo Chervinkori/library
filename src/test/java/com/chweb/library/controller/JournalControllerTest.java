@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -160,7 +161,7 @@ public class JournalControllerTest {
 
     @Test
     public void createValidationError() throws Exception {
-        createRequestDTO.setIssueDate(LocalDate.now().plusYears(1));
+        createRequestDTO.setIssueDate(LocalDateTime.now().plusYears(1));
         TypicalError typicalError = TypicalError.VALIDATION_ERROR;
 
         mvc.perform(post(URL_PREFIX)
@@ -277,7 +278,7 @@ public class JournalControllerTest {
     }
 
     private void initEntity() {
-        entity.setIssueDate(LocalDate.now().minusYears(50));
+        entity.setIssueDate(LocalDateTime.now().minusYears(50));
         entity.setLibrarian(librarianEntity);
         entity.setSubscriber(subscriberEntity);
         journalRepository.save(entity);
@@ -287,7 +288,7 @@ public class JournalControllerTest {
     }
 
     private void initCreateRequestDTO() {
-        createRequestDTO.setIssueDate(LocalDate.now().minusYears(50));
+        createRequestDTO.setIssueDate(LocalDateTime.now().minusYears(50));
         createRequestDTO.setBookId(Collections.singleton(bookEntity.getId()));
         createRequestDTO.setLibrarianId(librarianEntity.getId());
         createRequestDTO.setSubscriberId(subscriberEntity.getId());
@@ -295,7 +296,7 @@ public class JournalControllerTest {
 
     private void initUpdateRequestDTO() {
         updateRequestDTO.setId(entity.getId());
-        updateRequestDTO.setIssueDate(LocalDate.now().minusYears(100));
+        updateRequestDTO.setIssueDate(LocalDateTime.now().minusYears(100));
         updateRequestDTO.setLibrarianId(librarianEntity.getId());
         updateRequestDTO.setSubscriberId(subscriberEntity.getId());
     }

@@ -2,44 +2,49 @@ package com.chweb.library.util;
 
 import com.chweb.library.dto.pageable.PageableRequestDTO;
 import com.chweb.library.dto.pageable.SortingDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author chervinko <br>
  * 29.08.2021
  */
 public class PageableUtils {
+    private PageableUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Sort getSortFromDTO(SortingDTO[] sorting) {
-        if (sorting == null || sorting.length == 0) {
+        if (sorting == null) {
             return Sort.unsorted();
         }
 
-        Sort sort = null;
-        for (SortingDTO dto : sorting) {
-            if (dto.getProperties() == null || dto.getProperties().isEmpty()) {
-                continue;
-            }
+        List<SortingDTO> sortingDTOS = Arrays.stream(sorting)
+                .filter(dto -> (dto.getProperties() != null && !dto.getProperties().isEmpty()))
+                .collect(Collectors.toList());
 
-            String[] properties = dto.getProperties().stream()
-                    .map(prop -> CaseUtils.toCamelCase(prop, false, '_').trim())
-                    .distinct().filter(item -> !item.isEmpty())
-                    .toArray(String[]::new);
-
-            if (properties.length == 0) {
-                continue;
-            }
-
-            if (sort == null) {
-                sort = Sort.by(dto.getDirection(), properties);
-            } else {
-                sort.and(Sort.by(dto.getDirection(), properties));
-            }
+        List<Sort> allSorts = new ArrayList<>();
+        for (SortingDTO sortingDTO : sortingDTOS) {
+            List<Sort> sortList = sortingDTO.getProperties()
+                    .stream()
+                    .filter(StringUtils::isNotBlank)
+                    .map(String::trim)
+                    .map(prop -> CaseUtils.toCamelCase(prop, false, '_'))
+                    .distinct()
+                    .map(p -> Sort.by(sortingDTO.getDirection(), p))
+                    .collect(Collectors.toList());
+            allSorts.addAll(sortList);
         }
 
-        return sort;
+        return allSorts.stream().reduce(Sort::and).orElse(Sort.unsorted());
     }
 
     public static Pageable getPageableFromDTO(PageableRequestDTO dto) {

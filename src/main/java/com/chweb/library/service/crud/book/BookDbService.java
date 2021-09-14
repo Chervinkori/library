@@ -13,6 +13,7 @@ import com.chweb.library.service.crud.author.AuthorService;
 import com.chweb.library.service.crud.publishinghouse.PublishingHouseService;
 import com.chweb.library.service.crud.theme.ThemeService;
 import com.chweb.library.util.PageableUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,8 @@ public class BookDbService implements BookService {
     private final PublishingHouseService publishingHouseDbService;
     private final AuthorService authorDbService;
     private final ThemeService themeDbService;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public BookResponseDTO getById(Long id, Boolean inStock) {
@@ -192,15 +195,7 @@ public class BookDbService implements BookService {
 
     @Override
     public BookResponseDTO toResponseDTO(BookEntity entity) {
-        final BookResponseDTO dto = new BookResponseDTO();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setPublishYear(entity.getPublishYear());
-        dto.setAmount(entity.getAmount());
-        dto.setInStock(entity.getInStock());
-        dto.setDescription(entity.getDescription());
-        dto.setDescription(entity.getDescription());
-
+        BookResponseDTO dto = objectMapper.convertValue(entity, BookResponseDTO.class);
         dto.setPublishingHouse(publishingHouseDbService.toResponseDTO(entity.getPublishingHouse()));
         dto.setAuthors(entity.getAuthors().stream().map(authorDbService::toResponseDTO).collect(Collectors.toList()));
         dto.setThemes(entity.getThemes().stream().map(themeDbService::toResponseDTO).collect(Collectors.toList()));

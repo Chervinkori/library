@@ -22,6 +22,7 @@ public class SenderMailNotification implements SenderNotification {
     private String from;
 
     @Async
+    @Override
     public void sendSimpleMessage(String subject, String text, String... to) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
@@ -32,7 +33,19 @@ public class SenderMailNotification implements SenderNotification {
     }
 
     @Async
+    @Override
     public void sendSimpleMessage(Notification notification) {
         sendSimpleMessage(notification.getSubject(), notification.getText(), notification.getTo());
+    }
+
+    @Override
+    public void sendSimpleNotifications(Iterable<Notification> notifications) {
+        for (Notification notification : notifications) {
+            sendSimpleMessage(
+                    notification.getSubject(),
+                    notification.getText(),
+                    notification.getTo()
+            );
+        }
     }
 }

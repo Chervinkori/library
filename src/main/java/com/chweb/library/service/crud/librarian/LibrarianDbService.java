@@ -10,6 +10,7 @@ import com.chweb.library.entity.LibrarianEntity;
 import com.chweb.library.exception.EntityNotFoundException;
 import com.chweb.library.repository.LibrarianRepository;
 import com.chweb.library.util.PageableUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LibrarianDbService implements LibrarianService {
     private final LibrarianRepository librarianRepository;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public LibrarianResponseDTO getById(Long id) {
@@ -90,16 +93,6 @@ public class LibrarianDbService implements LibrarianService {
 
     @Override
     public LibrarianResponseDTO toResponseDTO(LibrarianEntity entity) {
-        LibrarianResponseDTO dto = new LibrarianResponseDTO();
-        dto.setId(entity.getId());
-        dto.setFirstName(entity.getFirstName());
-        dto.setMiddleName(entity.getMiddleName());
-        dto.setLastName(entity.getLastName());
-        dto.setPhoneNumber(entity.getPhoneNumber());
-        dto.setAddress(entity.getAddress());
-        dto.setEmploymentDate(entity.getEmploymentDate());
-        dto.setDismissalDate(entity.getDismissalDate());
-
-        return dto;
+        return objectMapper.convertValue(entity, LibrarianResponseDTO.class);
     }
 }

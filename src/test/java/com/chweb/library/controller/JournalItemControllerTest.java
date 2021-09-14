@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -261,7 +262,7 @@ public class JournalItemControllerTest {
     }
 
     private void initJournalEntity() {
-        journalEntity.setIssueDate(LocalDate.now().minusYears(50));
+        journalEntity.setIssueDate(LocalDateTime.now().minusYears(50));
         journalEntity.setLibrarian(librarianEntity);
         journalEntity.setSubscriber(subscriberEntity);
         journalRepository.save(journalEntity);

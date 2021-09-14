@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -231,7 +232,7 @@ public class BookControllerTest {
     @Test
     public void updateAmountError() throws Exception {
         JournalCreateRequestDTO journalCreateRequestDTO = new JournalCreateRequestDTO();
-        journalCreateRequestDTO.setIssueDate(LocalDate.now().minusYears(50));
+        journalCreateRequestDTO.setIssueDate(LocalDateTime.now().minusYears(50));
         journalCreateRequestDTO.setBookId(Collections.singleton(entity.getId()));
         journalCreateRequestDTO.setLibrarianId(librarianEntity.getId());
         journalCreateRequestDTO.setSubscriberId(subscriberEntity.getId());

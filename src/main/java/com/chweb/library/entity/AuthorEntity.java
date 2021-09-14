@@ -1,5 +1,7 @@
 package com.chweb.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -27,28 +29,35 @@ public class AuthorEntity extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @JsonProperty("first_name")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
+    @JsonProperty("middle_name")
     @Column(name = "middle_name")
     private String middleName;
 
+    @JsonProperty("last_name")
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @JsonProperty("birth_date")
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
+    @JsonProperty("death_date")
     @Column(name = "death_date")
     private LocalDate deathDate;
 
     @Column(name = "description")
     private String description;
 
+    @JsonProperty("update_date")
     @LastModifiedDate
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "authors")
     private Collection<BookEntity> books;
 }

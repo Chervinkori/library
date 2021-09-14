@@ -1,5 +1,7 @@
 package com.chweb.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -30,10 +32,12 @@ public class PublishingHouseEntity extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @JsonProperty("update_date")
     @LastModifiedDate
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "publishingHouse")
     private Collection<BookEntity> books;
 }

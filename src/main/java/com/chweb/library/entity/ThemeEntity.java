@@ -1,5 +1,7 @@
 package com.chweb.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,10 +37,12 @@ public class ThemeEntity extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @JsonProperty("update_date")
     @LastModifiedDate
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "themes")
     private Collection<BookEntity> books = new HashSet<>();
 }

@@ -1,5 +1,6 @@
 package com.chweb.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 public class BaseEntity {
+    @JsonProperty("create_date")
     @CreatedDate
     @Column(name = "create_date")
     private LocalDateTime createDate;

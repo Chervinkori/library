@@ -2,6 +2,7 @@ package com.chweb.library.service.notification.subscriber;
 
 import com.chweb.library.entity.*;
 import com.chweb.library.repository.*;
+import com.chweb.library.service.notification.SenderNotification;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 /**
@@ -55,6 +57,10 @@ public class BookExpireSubscribersNotificationTest {
     @Autowired
     private AuthorRepository authorRepository;
 
+
+    @Autowired
+    private SenderNotification senderNotification;
+
     @Autowired
     private BookExpireSubscribersNotification bookExpireSubscribersNotification;
 
@@ -71,7 +77,7 @@ public class BookExpireSubscribersNotificationTest {
 
     @Test
     public void send() {
-        bookExpireSubscribersNotification.send();
+        senderNotification.sendSimpleNotifications(bookExpireSubscribersNotification.getNotifications());
     }
 
     private void initLibrarianEntity() {
@@ -127,7 +133,7 @@ public class BookExpireSubscribersNotificationTest {
     }
 
     private void initJournalEntity() {
-        journalEntity.setIssueDate(LocalDate.now().minusDays(bookUseNumberDays));
+        journalEntity.setIssueDate(LocalDateTime.now().minusDays(bookUseNumberDays));
         journalEntity.setLibrarian(librarianEntity);
         journalEntity.setSubscriber(subscriberEntity);
         journalRepository.save(journalEntity);
