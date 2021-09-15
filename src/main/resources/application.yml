@@ -25,7 +25,7 @@ spring:
 
 cron:
   book-use-time-expire:
-    expression: "0 8 * * * *"
+    expression: "0 0 8 * * *"
 
 library:
   book-use-number-days: 14
