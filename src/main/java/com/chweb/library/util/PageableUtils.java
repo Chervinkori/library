@@ -8,10 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
  * @author chervinko <br>
@@ -22,41 +20,24 @@ public class PageableUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Sort getSortFromDTO(SortingDTO[] sorting) {
-        if (sorting == null) {
-            return Sort.unsorted();
-        }
-
-        List<SortingDTO> sortingDTOS = Arrays.stream(sorting)
-                .filter(dto -> (dto.getProperties() != null && !dto.getProperties().isEmpty()))
-                .collect(Collectors.toList());
-
-        List<Sort> allSorts = new ArrayList<>();
-        for (SortingDTO sortingDTO : sortingDTOS) {
-            List<Sort> sortList = sortingDTO.getProperties()
-                    .stream()
-                    .filter(StringUtils::isNotBlank)
-                    .map(String::trim)
-                    .map(prop -> CaseUtils.toCamelCase(prop, false, '_'))
-                    .distinct()
-                    .map(p -> Sort.by(sortingDTO.getDirection(), p))
-                    .collect(Collectors.toList());
-            allSorts.addAll(sortList);
-        }
-
-        return allSorts.stream().reduce(Sort::and).orElse(Sort.unsorted());
+    public static Sort getSortFromDTO(SortingDTO... dtos) {
+        return Arrays.stream(dtos)
+                .filter(dto -> Objects.nonNull(dto) && StringUtils.isNotBlank(dto.getProperty()))
+                .map(dto -> Sort.by(dto.getDirection(), CaseUtils.toCamelCase(dto.getProperty(), false, '_')))
+                .reduce(Sort::and)
+                .orElse(Sort.unsorted());
     }
 
     public static Pageable getPageableFromDTO(PageableRequestDTO dto) {
-        if (dto.getPage() == null || dto.getSize() == null) {
+        if (dto == null || dto.getPage() == null || dto.getSize() == null) {
             return Pageable.unpaged();
         }
 
         Sort sort = getSortFromDTO(dto.getSorting());
-        if (sort == null) {
-            return PageRequest.of(dto.getPage(), dto.getSize());
+        if (sort != null) {
+            return PageRequest.of(dto.getPage(), dto.getSize(), sort);
         }
 
-        return PageRequest.of(dto.getPage(), dto.getSize(), getSortFromDTO(dto.getSorting()));
+        return PageRequest.of(dto.getPage(), dto.getSize());
     }
 }

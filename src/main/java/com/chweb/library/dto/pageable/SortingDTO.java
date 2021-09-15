@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Sort;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.Collection;
 
 /**
  * @author chervinko <br>
@@ -18,5 +17,5 @@ import java.util.Collection;
 public class SortingDTO {
     Sort.Direction direction = Sort.Direction.ASC;
     @NotEmpty
-    Collection<String> properties;
+    String property;
 }

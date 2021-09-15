@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +41,7 @@ public class BookExpireSubscribersNotification {
                         "and i.returnDate is null and j.issueDate <= :issueDate " +
                         "group by j",
                 JournalEntity.class
-        ).setParameter("issueDate", LocalDate.now().minusDays(bookUseNumberDays));
+        ).setParameter("issueDate", LocalDateTime.now().minusDays(bookUseNumberDays));
 
         List<JournalEntity> journalList = query.getResultList().stream()
                 .filter(item -> !StringUtils.isEmpty(item.getSubscriber().getEmail()))

@@ -18,7 +18,7 @@ public class PageableResponseDTO<T> {
     List<T> data;
     MetaDTO meta;
 
-    public PageableResponseDTO(Page<T> page, SortingDTO[] sorting) {
+    public PageableResponseDTO(Page<T> page, SortingDTO sorting) {
         this.data = page.getContent();
         this.meta = new MetaDTO(new PageableDTO(
                 page.getTotalPages(),

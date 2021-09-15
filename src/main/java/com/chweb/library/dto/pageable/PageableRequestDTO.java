@@ -20,5 +20,5 @@ public class PageableRequestDTO {
     Integer page = 0;
     @Min(1)
     Integer size = 20;
-    SortingDTO[] sorting;
+    SortingDTO sorting;
 }

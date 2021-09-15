@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.Collections;
-
 import static org.junit.Assert.*;
 
 /**
@@ -16,21 +14,32 @@ import static org.junit.Assert.*;
  */
 public class PageableUtilsTest {
     @Test
+    public void getSortFromDTONull() {
+        assertEquals(PageableUtils.getSortFromDTO((SortingDTO) null), Sort.unsorted());
+    }
+
+    @Test
     public void getSortFromDTO() {
         String property = "id";
+        Sort.Direction direction = Sort.Direction.ASC;
 
         SortingDTO dto = new SortingDTO();
-        dto.setDirection(Sort.Direction.ASC);
-        dto.setProperties(Collections.singleton(property));
+        dto.setDirection(direction);
+        dto.setProperty(property);
 
-        Sort sort = PageableUtils.getSortFromDTO(new SortingDTO[]{dto});
+        Sort sort = PageableUtils.getSortFromDTO(dto);
         assertNotNull(sort);
         assertTrue(sort.isSorted());
 
         Sort.Order order = sort.getOrderFor(property);
         assertNotNull(order);
         assertEquals(order.getProperty(), property);
-        assertEquals(order.getDirection(), Sort.Direction.ASC);
+        assertEquals(order.getDirection(), direction);
+    }
+
+    @Test
+    public void getPageableFromDTONull() {
+        assertEquals(PageableUtils.getPageableFromDTO(null), Pageable.unpaged());
     }
 
     @Test

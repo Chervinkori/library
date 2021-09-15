@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MetaDTO {
     PageableDTO pageable;
-    SortingDTO[] sorting;
+    SortingDTO sorting;
 }

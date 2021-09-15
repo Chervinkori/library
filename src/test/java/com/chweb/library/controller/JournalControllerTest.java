@@ -1,6 +1,7 @@
 package com.chweb.library.controller;
 
 import com.chweb.library.dto.journal.JournalCreateRequestDTO;
+import com.chweb.library.dto.journal.JournalResponseDTO;
 import com.chweb.library.dto.journal.JournalUpdateRequestDTO;
 import com.chweb.library.dto.response.TypicalError;
 import com.chweb.library.entity.*;
@@ -19,6 +20,7 @@ import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
@@ -30,8 +32,7 @@ import java.util.Collections;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -131,17 +132,24 @@ public class JournalControllerTest {
     @Test
     public void getById() throws Exception {
         String urlTemplate = URL_PREFIX + "/{id}";
-        mvc.perform(get(urlTemplate, entity.getId()))
+        MvcResult mvcResult = mvc.perform(get(urlTemplate, entity.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.issue_date", is(entity.getIssueDate().toString())))
-                .andExpect(jsonPath("$.items", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$.items", hasSize(greaterThan(0))))
+                .andReturn();
+
+        JournalResponseDTO dto = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
+                JournalResponseDTO.class
+        );
+
+        assertEquals(dto.getIssueDate().withNano(0), entity.getIssueDate().withNano(0));
     }
 
     @Test
     public void getAll() throws Exception {
         mvc.perform(get(URL_PREFIX))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[*].issue_date").value(Matchers.contains(entity.getIssueDate().toString())))
+                .andExpect(jsonPath("$.data[*].id").value(Matchers.contains(entity.getId().intValue())))
                 .andExpect(jsonPath("$.data[*].items", hasSize(greaterThan(0))));
     }
 
@@ -150,13 +158,15 @@ public class JournalControllerTest {
         int totalElements = journalRepository.findAllByActiveIsTrue().size();
 
         // Выводить по одному элементу на страницу
-        mvc.perform(get(URL_PREFIX).queryParam("size", "1"))
+        MvcResult mvcResult = mvc.perform(get(URL_PREFIX).queryParam("size", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.pageable").exists())
                 .andExpect(jsonPath("$.meta.pageable.total_elements", is(totalElements)))
                 .andExpect(jsonPath("$.meta.pageable.total_pages", is(totalElements)))
-                .andExpect(jsonPath("$.data[*].issue_date").value(Matchers.contains(entity.getIssueDate().toString())))
-                .andExpect(jsonPath("$.data[*].items", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$.data[*].id").value(Matchers.contains(entity.getId().intValue())))
+                .andExpect(jsonPath("$.data[*].items", hasSize(greaterThan(0)))).andReturn();
+
+        int i = 1;
     }
 
     @Test
@@ -176,22 +186,35 @@ public class JournalControllerTest {
         bookEntity.setInStock(true);
         bookRepository.save(bookEntity);
 
-        mvc.perform(post(URL_PREFIX).contentType(MediaType.APPLICATION_JSON)
+        MvcResult mvcResult = mvc.perform(post(URL_PREFIX).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createRequestDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.issue_date", is(createRequestDTO.getIssueDate().toString())))
-                .andExpect(jsonPath("$.items", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$.items", hasSize(greaterThan(0))))
+                .andReturn();
 
+        JournalResponseDTO dto = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
+                JournalResponseDTO.class
+        );
+
+        assertEquals(dto.getIssueDate().withNano(0), entity.getIssueDate().withNano(0));
         assertFalse(bookRepository.getById(bookEntity.getId()).getInStock());
     }
 
     @Test
     public void update() throws Exception {
-        mvc.perform(put(URL_PREFIX).contentType(MediaType.APPLICATION_JSON)
+        MvcResult mvcResult = mvc.perform(put(URL_PREFIX).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequestDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.issue_date", is(updateRequestDTO.getIssueDate().toString())))
-                .andExpect(jsonPath("$.items", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$.items", hasSize(greaterThan(0))))
+                .andReturn();
+
+        JournalResponseDTO dto = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
+                JournalResponseDTO.class
+        );
+
+        assertEquals(dto.getIssueDate().withNano(0), entity.getIssueDate().withNano(0));
     }
 
     @Test
@@ -213,7 +236,7 @@ public class JournalControllerTest {
     public void getByLibrarianId() throws Exception {
         mvc.perform(get(URL_PREFIX + "/librarian/{id}", entity.getLibrarian().getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[*].issue_date").value(Matchers.contains(entity.getIssueDate().toString())))
+                .andExpect(jsonPath("$.data[*].id").value(Matchers.contains(entity.getId().intValue())))
                 .andExpect(jsonPath("$.data[*].items", hasSize(greaterThan(0))));
     }
 
@@ -221,7 +244,7 @@ public class JournalControllerTest {
     public void getBySubscriberId() throws Exception {
         mvc.perform(get(URL_PREFIX + "/subscriber/{id}", entity.getSubscriber().getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[*].issue_date").value(Matchers.contains(entity.getIssueDate().toString())))
+                .andExpect(jsonPath("$.data[*].id").value(Matchers.contains(entity.getId().intValue())))
                 .andExpect(jsonPath("$.data[*].items", hasSize(greaterThan(0))));
     }
 
